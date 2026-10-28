@@ -1,0 +1,62 @@
+[
+  {
+    "id": "query_products",
+    "name": "商品查询",
+    "description": "按关键词、分类、口味、价格和过敏原筛选商品，返回真实商品与营养信息。",
+    "category": "商品",
+    "enabled": true,
+    "version": "1.0.0",
+    "timeoutMs": 5000,
+    "updatedAt": "2026-10-27T02:49:14.775Z"
+  },
+  {
+    "id": "query_activities",
+    "name": "活动查询",
+    "description": "按状态、门槛和生效时间查询活动与优惠规则。",
+    "category": "营销",
+    "enabled": true,
+    "version": "1.0.0",
+    "timeoutMs": 5000,
+    "updatedAt": "2026-10-18T10:11:00+08:00"
+  },
+  {
+    "id": "query_coupons",
+    "name": "优惠券查询",
+    "description": "查询优惠券类型、门槛、有效期、适用商品与新客限制，并判断当前可用性。",
+    "category": "营销",
+    "enabled": true,
+    "version": "1.0.0",
+    "timeoutMs": 5000,
+    "updatedAt": "2026-10-18T10:12:00+08:00"
+  },
+  {
+    "id": "calculate_price",
+    "name": "价格试算",
+    "description": "基于真实商品、活动、优惠券和新客资格做只读价格试算，不创建订单。",
+    "category": "交易",
+    "enabled": true,
+    "version": "1.0.0",
+    "timeoutMs": 3000,
+    "updatedAt": "2026-10-27T03:20:20.713Z"
+  },
+  {
+    "id": "query_orders",
+    "name": "订单查询",
+    "description": "按订单号、用户或状态查询订单、商品明细、物流和售后状态。",
+    "category": "订单",
+    "enabled": true,
+    "version": "1.0.0",
+    "timeoutMs": 5000,
+    "updatedAt": "2026-10-18T10:14:00+08:00"
+  },
+  {
+    "id": "query_logistics",
+    "name": "物流查询",
+    "description": "查询订单承运商、运单号、最新物流轨迹和异常节点。",
+    "category": "物流",
+    "enabled": true,
+    "version": "1.0.0",
+    "timeoutMs": 5000,
+    "updatedAt": "2026-10-18T10:15:00+08:00"
+  }
+]

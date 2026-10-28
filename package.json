@@ -1,0 +1,51 @@
+{
+  "name": "snackops",
+  "version": "0.3.0",
+  "private": true,
+  "packageManager": "pnpm@12.6.0",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "dev": "node scripts/serve.mjs dev",
+    "build": "next build --webpack",
+    "start": "node scripts/serve.mjs start",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "next typegen && tsc --noEmit",
+    "validate": "pnpm typecheck && pnpm lint",
+    "test:store": "node scripts/test-store.mjs",
+    "test:registry": "node scripts/test-registry.mjs",
+    "test:agent": "node scripts/test-agent.mjs",
+    "test:admin": "node scripts/test-admin.mjs",
+    "seed:registry": "node scripts/seed-registry.mjs",
+    "test:eval": "node scripts/test-eval.mjs",
+    "classroom:reset": "node scripts/classroom-reset.mjs",
+    "test:reset": "node scripts/test-reset.mjs"
+  },
+  "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-slot": "^1.2.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "coze-coding-dev-sdk": "^0.7.32",
+    "lucide-react": "^0.468.0",
+    "next": "16.4.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "recharts": "^3.3.0",
+    "server-only": "^0.0.1",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.3.1",
+    "zod": "^4.1.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^22.20.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "16.4.2",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3"
+  }
+}

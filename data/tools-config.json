@@ -1,0 +1,31 @@
+{
+  "mode": "local",
+  "defaultTimeoutMs": 5000,
+  "allowMutations": false,
+  "tools": {
+    "query_products": {
+      "enabled": true,
+      "retry": 1
+    },
+    "query_activities": {
+      "enabled": true,
+      "retry": 1
+    },
+    "query_coupons": {
+      "enabled": true,
+      "retry": 0
+    },
+    "calculate_price": {
+      "enabled": true,
+      "retry": 0
+    },
+    "query_orders": {
+      "enabled": true,
+      "retry": 1
+    },
+    "query_logistics": {
+      "enabled": true,
+      "retry": 1
+    }
+  }
+}

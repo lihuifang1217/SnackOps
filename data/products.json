@@ -1,0 +1,227 @@
+[
+  {
+    "id": "prod-01",
+    "name": "每日混合坚果 25g × 7",
+    "description": "独立小包装原味烘焙坚果，适合办公室与通勤加餐。",
+    "category": "坚果",
+    "flavor": "原味烘焙",
+    "price": 39.9,
+    "stock": 86,
+    "status": "在售",
+    "tags": [
+      "独立包装",
+      "办公室",
+      "高蛋白"
+    ],
+    "ingredients": [
+      "核桃仁",
+      "巴旦木",
+      "腰果"
+    ],
+    "allergens": [
+      "核桃",
+      "巴旦木",
+      "腰果"
+    ],
+    "mayContain": [
+      "花生",
+      "芝麻"
+    ],
+    "nutrition": {
+      "basis": "每100g",
+      "energyKcal": 590,
+      "proteinG": 18,
+      "fatG": 50,
+      "carbohydrateG": 18,
+      "sugarG": 4.5,
+      "sodiumMg": 10
+    },
+    "shelfLifeDays": 180
+  },
+  {
+    "id": "prod-02",
+    "name": "海盐苏打饼干 300g",
+    "description": "咸香酥脆的分享装苏打饼干，适合下午茶和办公室常备。",
+    "category": "饼干",
+    "flavor": "海盐",
+    "price": 18.9,
+    "stock": 12,
+    "status": "在售",
+    "tags": [
+      "咸味",
+      "分享装",
+      "下午茶"
+    ],
+    "ingredients": [
+      "小麦粉",
+      "植物油",
+      "乳粉",
+      "食用盐",
+      "酵母"
+    ],
+    "allergens": [
+      "小麦",
+      "乳制品"
+    ],
+    "mayContain": [
+      "大豆"
+    ],
+    "nutrition": {
+      "basis": "每100g",
+      "energyKcal": 430,
+      "proteinG": 8,
+      "fatG": 18,
+      "carbohydrateG": 60,
+      "sugarG": 5.2,
+      "sodiumMg": 220
+    },
+    "shelfLifeDays": 270
+  },
+  {
+    "id": "prod-03",
+    "name": "冻干草莓脆 30g",
+    "description": "整颗草莓冻干，酸甜轻盈，不额外添加蔗糖。",
+    "category": "果干",
+    "flavor": "草莓酸甜",
+    "price": 22.9,
+    "stock": 0,
+    "status": "预售",
+    "tags": [
+      "冻干",
+      "无添加蔗糖",
+      "轻负担"
+    ],
+    "ingredients": [
+      "草莓"
+    ],
+    "allergens": [],
+    "mayContain": [],
+    "nutrition": {
+      "basis": "每100g",
+      "energyKcal": 360,
+      "proteinG": 5,
+      "fatG": 1.2,
+      "carbohydrateG": 80,
+      "sugarG": 38,
+      "sodiumMg": 18
+    },
+    "shelfLifeDays": 365
+  },
+  {
+    "id": "prod-04",
+    "name": "72% 黑巧克力 100g",
+    "description": "可可风味浓郁的低糖黑巧克力，适合送礼与分享。",
+    "category": "巧克力",
+    "flavor": "浓郁可可",
+    "price": 26.5,
+    "stock": 42,
+    "status": "在售",
+    "tags": [
+      "低糖",
+      "办公室",
+      "礼物"
+    ],
+    "ingredients": [
+      "可可液块",
+      "可可脂",
+      "白砂糖",
+      "乳粉",
+      "大豆磷脂"
+    ],
+    "allergens": [
+      "乳制品",
+      "大豆"
+    ],
+    "mayContain": [
+      "坚果"
+    ],
+    "nutrition": {
+      "basis": "每100g",
+      "energyKcal": 560,
+      "proteinG": 8,
+      "fatG": 42,
+      "carbohydrateG": 32,
+      "sugarG": 18,
+      "sodiumMg": 24
+    },
+    "shelfLifeDays": 365
+  },
+  {
+    "id": "prod-05",
+    "name": "香辣锅巴 220g",
+    "description": "香辣酥脆的追剧分享装锅巴，口味偏重。",
+    "category": "膨化",
+    "flavor": "香辣",
+    "price": 13.9,
+    "stock": 178,
+    "status": "在售",
+    "tags": [
+      "重口味",
+      "追剧",
+      "分享装"
+    ],
+    "ingredients": [
+      "大米",
+      "植物油",
+      "辣椒粉",
+      "食用盐",
+      "酱油粉"
+    ],
+    "allergens": [
+      "小麦",
+      "大豆"
+    ],
+    "mayContain": [
+      "芝麻"
+    ],
+    "nutrition": {
+      "basis": "每100g",
+      "energyKcal": 510,
+      "proteinG": 6,
+      "fatG": 27,
+      "carbohydrateG": 62,
+      "sugarG": 3.1,
+      "sodiumMg": 560
+    },
+    "shelfLifeDays": 210
+  },
+  {
+    "id": "prod-06",
+    "name": "原味猪肉脯 120g",
+    "description": "咸香有嚼劲的独立包装猪肉脯，适合补充蛋白质。",
+    "category": "肉制品",
+    "flavor": "原味",
+    "price": 29.9,
+    "stock": 26,
+    "status": "在售",
+    "tags": [
+      "高蛋白",
+      "独立包装",
+      "咸香"
+    ],
+    "ingredients": [
+      "猪后腿肉",
+      "白砂糖",
+      "鱼露",
+      "大豆蛋白",
+      "香辛料"
+    ],
+    "allergens": [
+      "大豆",
+      "鱼类"
+    ],
+    "mayContain": [
+      "小麦"
+    ],
+    "nutrition": {
+      "basis": "每100g",
+      "energyKcal": 380,
+      "proteinG": 38,
+      "fatG": 12,
+      "carbohydrateG": 30,
+      "sugarG": 22,
+      "sodiumMg": 980
+    },
+    "shelfLifeDays": 150
+  }
+]

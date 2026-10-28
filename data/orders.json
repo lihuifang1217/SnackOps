@@ -1,0 +1,116 @@
+[
+  {
+    "id": "order-20261018-001",
+    "orderNo": "SN202610180001",
+    "userId": "user-01",
+    "items": [
+      { "productId": "prod-01", "quantity": 2, "unitPrice": 39.9 }
+    ],
+    "itemSummary": "每日混合坚果 25g × 7 × 2",
+    "amount": 79.8,
+    "status": "待发货",
+    "logisticsStatus": "未发货",
+    "afterSalesStatus": "无",
+    "shippingAddressMasked": "上海市浦东新区****路 18 号",
+    "logistics": null,
+    "createdAt": "2026-10-18T09:10:00+08:00"
+  },
+  {
+    "id": "order-20261017-014",
+    "orderNo": "SN202610170014",
+    "userId": "user-02",
+    "items": [
+      { "productId": "prod-02", "quantity": 1, "unitPrice": 18.9 },
+      { "productId": "prod-05", "quantity": 2, "unitPrice": 13.9 }
+    ],
+    "itemSummary": "海盐苏打饼干 300g × 1、香辣锅巴 220g × 2",
+    "amount": 46.7,
+    "status": "已发货",
+    "logisticsStatus": "运输中",
+    "afterSalesStatus": "无",
+    "shippingAddressMasked": "上海市徐汇区****弄 6 号",
+    "logistics": {
+      "carrier": "顺丰速运",
+      "trackingNo": "SF143820261017",
+      "status": "运输中",
+      "latestEvent": "快件已到达上海转运中心",
+      "events": [
+        { "at": "2026-10-17T22:10:00+08:00", "description": "商家已发货，快件已揽收" },
+        { "at": "2026-10-18T06:35:00+08:00", "description": "快件离开苏州分拨中心" },
+        { "at": "2026-10-18T08:15:00+08:00", "description": "快件已到达上海转运中心" }
+      ],
+      "updatedAt": "2026-10-18T08:15:00+08:00"
+    },
+    "createdAt": "2026-10-17T20:42:00+08:00"
+  },
+  {
+    "id": "order-20261016-008",
+    "orderNo": "SN202610160008",
+    "userId": "user-03",
+    "items": [
+      { "productId": "prod-04", "quantity": 2, "unitPrice": 26.5 }
+    ],
+    "itemSummary": "72% 黑巧克力 100g × 2",
+    "amount": 53,
+    "status": "已签收",
+    "logisticsStatus": "已签收",
+    "afterSalesStatus": "无",
+    "shippingAddressMasked": "杭州市西湖区****路 9 号",
+    "logistics": {
+      "carrier": "中通快递",
+      "trackingNo": "ZT7820261016",
+      "status": "已签收",
+      "latestEvent": "快件已由本人签收，如有问题请联系客服",
+      "events": [
+        { "at": "2026-10-16T15:20:00+08:00", "description": "商家已发货，等待快递员揽收" },
+        { "at": "2026-10-17T09:40:00+08:00", "description": "快件正在派送中" },
+        { "at": "2026-10-17T16:48:00+08:00", "description": "快件已由本人签收" }
+      ],
+      "updatedAt": "2026-10-17T16:48:00+08:00"
+    },
+    "createdAt": "2026-10-16T13:05:00+08:00"
+  },
+  {
+    "id": "order-20261015-021",
+    "orderNo": "SN202610150021",
+    "userId": "user-02",
+    "items": [
+      { "productId": "prod-03", "quantity": 1, "unitPrice": 22.9 }
+    ],
+    "itemSummary": "冻干草莓脆 30g × 1",
+    "amount": 22.9,
+    "status": "售后中",
+    "logisticsStatus": "已签收",
+    "afterSalesStatus": "处理中",
+    "shippingAddressMasked": "上海市徐汇区****弄 6 号",
+    "logistics": {
+      "carrier": "圆通速递",
+      "trackingNo": "YT5520261015",
+      "status": "已签收",
+      "latestEvent": "快件已放至丰巢柜，取件码已发送",
+      "events": [
+        { "at": "2026-10-15T13:10:00+08:00", "description": "商家已发货，快件已揽收" },
+        { "at": "2026-10-16T07:25:00+08:00", "description": "快件已到达上海徐汇网点" },
+        { "at": "2026-10-16T11:05:00+08:00", "description": "快件已放至丰巢柜，取件码已发送" }
+      ],
+      "updatedAt": "2026-10-16T11:05:00+08:00"
+    },
+    "createdAt": "2026-10-15T11:30:00+08:00"
+  },
+  {
+    "id": "order-20261014-003",
+    "orderNo": "SN202610140003",
+    "userId": "user-04",
+    "items": [
+      { "productId": "prod-06", "quantity": 2, "unitPrice": 29.9 }
+    ],
+    "itemSummary": "原味猪肉脯 120g × 2",
+    "amount": 59.8,
+    "status": "已取消",
+    "logisticsStatus": "未发货",
+    "afterSalesStatus": "无",
+    "shippingAddressMasked": "苏州市工业园区****街 12 号",
+    "logistics": null,
+    "createdAt": "2026-10-14T08:15:00+08:00"
+  }
+]

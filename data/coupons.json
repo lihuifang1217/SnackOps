@@ -1,0 +1,58 @@
+[
+  {
+    "id": "coupon-01",
+    "name": "囤货节满减券",
+    "code": "SNACK20",
+    "type": "满减",
+    "threshold": 99,
+    "discount": 20,
+    "status": "启用",
+    "validUntil": "2026-10-31T23:59:59+08:00",
+    "newCustomerOnly": false,
+    "applicableProductIds": [],
+    "stackableWithActivity": true,
+    "description": "全店满 99 元减 20 元，可与可叠加活动共用。"
+  },
+  {
+    "id": "coupon-02",
+    "name": "新客欢迎券",
+    "code": "HELLO10",
+    "type": "满减",
+    "threshold": 49,
+    "discount": 10,
+    "status": "启用",
+    "validUntil": "2026-12-31T23:59:59+08:00",
+    "newCustomerOnly": true,
+    "applicableProductIds": [],
+    "stackableWithActivity": true,
+    "description": "新客专享满 49 元减 10 元，每个账号限用一次。"
+  },
+  {
+    "id": "coupon-03",
+    "name": "秋日会员券",
+    "code": "AUTUMN15",
+    "type": "满减",
+    "threshold": 129,
+    "discount": 15,
+    "status": "停用",
+    "validUntil": "2026-09-30T23:59:59+08:00",
+    "newCustomerOnly": false,
+    "applicableProductIds": [],
+    "stackableWithActivity": false,
+    "description": "已过期的会员券，仅保留用于历史订单核对。"
+  },
+  {
+    "id": "coupon-04",
+    "name": "会员专享 85 折券",
+    "code": "VIP85",
+    "type": "折扣",
+    "threshold": 199,
+    "discount": 15,
+    "status": "启用",
+    "validUntil": "2026-11-30T23:59:59+08:00",
+    "newCustomerOnly": false,
+    "applicableProductIds": ["prod-01", "prod-04", "prod-06"],
+    "stackableWithActivity": false,
+    "description": "会员专享指定商品 85 折，优惠金额按折扣计算。"
+  }
+]

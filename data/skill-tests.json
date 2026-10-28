@@ -1,0 +1,18 @@
+[
+  {
+    "id": "skill-test-1793153180718-7c15bd",
+    "skillId": "need-extraction",
+    "skillVersion": "1.0.0",
+    "hash": "0f888bf5fdbcb910133fe586f4c6bbc41508c78eca339eccbdf658f5395bd8b4",
+    "provider": "openai-compatible",
+    "model": "deepseek-chat",
+    "input": "给同事买点不辣的办公室零食，预算 100 元以内。",
+    "output": "{\n  \"intent\": \"recommendation\",\n  \"productPreferences\": {\n    \"categories\": [],\n    \"flavors\": [],\n    \"tags\": [\"不辣\", \"办公室零食\"],\n    \"budget\": 100,\n    \"quantity\": null,\n    \"scenario\": \"给同事买\"\n  },\n  \"safetyConstraints\": {\n    \"allergens\": [],\n    \"specialPopulation\": [],\n    \"avoidIngredients\": []\n  },\n  \"orderReferences\": {\n    \"orderNo\": null,\n    \"trackingNo\": null,\n    \"productNames\": []\n  },\n  \"riskFlags\": [],\n  \"missingInfo\": [],\n  \"nextAction\": \"recommend\",\n  \"summary\": \"用户想给同事买不辣的办公室零食，预算 100 元以内。\"\n}",
+    "durationMs": 1103,
+    "status": "SUCCESS",
+    "error": null,
+    "dependencies": [],
+    "toolRuns": [],
+    "createdAt": "2026-10-28T02:06:20.718Z"
+  }
+]

@@ -1,0 +1,58 @@
+[
+  {
+    "id": "act-01",
+    "name": "秋季囤货节 满 99 减 20",
+    "type": "满减",
+    "status": "进行中",
+    "startAt": "2026-10-01T00:00:00+08:00",
+    "endAt": "2026-10-31T23:59:59+08:00",
+    "threshold": 99,
+    "discount": 20,
+    "offerRule": "店铺商品满 99 元减 20 元，每个订单限享一次。",
+    "applicableProductIds": [],
+    "stackableWithCoupon": true,
+    "description": "全店满减活动，可与新客欢迎券叠加，但每笔订单限用一张优惠券。"
+  },
+  {
+    "id": "act-02",
+    "name": "新客首单礼 满 49 减 10",
+    "type": "满减",
+    "status": "进行中",
+    "startAt": "2026-09-01T00:00:00+08:00",
+    "endAt": "2026-12-31T23:59:59+08:00",
+    "threshold": 49,
+    "discount": 10,
+    "offerRule": "新客首单满 49 元减 10 元，每个账号限用一次。",
+    "applicableProductIds": [],
+    "stackableWithCoupon": false,
+    "description": "首次下单用户专享，需通过新客资格校验。"
+  },
+  {
+    "id": "act-03",
+    "name": "会员日第二件半价",
+    "type": "折扣",
+    "status": "已结束",
+    "startAt": "2026-09-18T00:00:00+08:00",
+    "endAt": "2026-09-20T23:59:59+08:00",
+    "threshold": 0,
+    "discount": 50,
+    "offerRule": "会员指定饼干第二件五折。",
+    "applicableProductIds": ["prod-02"],
+    "stackableWithCoupon": false,
+    "description": "会员日历史活动，已经结束。"
+  },
+  {
+    "id": "act-04",
+    "name": "周末加赠果干小样",
+    "type": "赠品",
+    "status": "草稿",
+    "startAt": "2026-10-24T00:00:00+08:00",
+    "endAt": "2026-10-26T23:59:59+08:00",
+    "threshold": 79,
+    "discount": 0,
+    "offerRule": "满 79 元加赠草莓脆小样一份。",
+    "applicableProductIds": [],
+    "stackableWithCoupon": true,
+    "description": "周末活动草稿，规则仍待运营确认。"
+  }
+]

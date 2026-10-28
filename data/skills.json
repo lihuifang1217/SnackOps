@@ -1,0 +1,218 @@
+[
+  {
+    "id": "need-extraction",
+    "name": "需求提取",
+    "description": "从客服对话中提取商品偏好、预算、过敏原、订单信息和用户诉求，形成结构化上下文。",
+    "category": "理解",
+    "enabled": true,
+    "model": "snackops-fixture-v1",
+    "temperature": 0.1,
+    "maxTokens": 800,
+    "requiredTools": [],
+    "version": "1.0.0",
+    "filePath": "skills/need-extraction/SKILL.md",
+    "updatedAt": "2026-10-18T09:00:00+08:00"
+  },
+  {
+    "id": "recommendation-decision",
+    "name": "推荐决策",
+    "description": "基于商品、活动、优惠券和用户约束决定推荐组合，并明确不推荐的原因。",
+    "category": "推荐",
+    "enabled": true,
+    "model": "snackops-fixture-v1",
+    "temperature": 0.2,
+    "maxTokens": 1200,
+    "requiredTools": [
+      "query_products",
+      "query_activities",
+      "query_coupons"
+    ],
+    "version": "1.0.0",
+    "filePath": "skills/recommendation-decision/SKILL.md",
+    "updatedAt": "2026-10-18T09:05:00+08:00"
+  },
+  {
+    "id": "recommendation-reason",
+    "name": "推荐理由生成",
+    "description": "将实际商品标签、口味、价格与活动信息转化为简洁、可核验的推荐理由。",
+    "category": "推荐",
+    "enabled": true,
+    "model": "snackops-fixture-v1",
+    "temperature": 0.35,
+    "maxTokens": 900,
+    "requiredTools": [],
+    "version": "1.0.0",
+    "filePath": "skills/recommendation-reason/SKILL.md",
+    "updatedAt": "2026-10-18T09:10:00+08:00"
+  },
+  {
+    "id": "response-generator",
+    "name": "回复生成",
+    "description": "把结构化结果组织成自然、克制、可执行的中文客服回复，并保留必要的下一步。",
+    "category": "对话",
+    "enabled": true,
+    "model": "snackops-fixture-v1",
+    "temperature": 0.45,
+    "maxTokens": 1400,
+    "requiredTools": [],
+    "version": "1.0.3",
+    "filePath": "skills/response-generator/SKILL.md",
+    "updatedAt": "2026-10-27T07:47:09.996Z"
+  },
+  {
+    "id": "risk-check",
+    "name": "回复风险审核",
+    "description": "对候选客服回复执行价格、承诺、特殊人群、投诉和诈骗风险审计，只阻断危险回复。",
+    "category": "安全",
+    "enabled": true,
+    "model": "snackops-fixture-v1",
+    "temperature": 0,
+    "maxTokens": 1200,
+    "requiredTools": [],
+    "version": "1.0.0",
+    "filePath": "skills/risk-check/SKILL.md",
+    "updatedAt": "2026-10-18T09:20:00+08:00"
+  },
+  {
+    "id": "clarification-question",
+    "name": "澄清追问",
+    "description": "在信息不足时提出最少、最关键的追问，避免一次抛出过多问题。",
+    "category": "理解",
+    "enabled": true,
+    "model": "snackops-fixture-v1",
+    "temperature": 0.2,
+    "maxTokens": 600,
+    "requiredTools": [],
+    "version": "1.0.0",
+    "filePath": "skills/clarification-question/SKILL.md",
+    "updatedAt": "2026-10-18T09:25:00+08:00"
+  },
+  {
+    "id": "product-substitution",
+    "name": "商品替代建议",
+    "description": "当商品缺货、过敏原不合适或预算不匹配时，给出可核验的替代商品和价格差异。",
+    "category": "推荐",
+    "enabled": true,
+    "model": "snackops-fixture-v1",
+    "temperature": 0.2,
+    "maxTokens": 900,
+    "requiredTools": [
+      "query_products",
+      "calculate_price"
+    ],
+    "version": "1.0.1",
+    "filePath": "skills/product-substitution/SKILL.md",
+    "updatedAt": "2026-10-27T02:27:19.334Z"
+  },
+  {
+    "id": "after-sales-classification",
+    "name": "售后问题分类",
+    "description": "识别破损、缺件、退换货和退款诉求，并匹配售后政策与处理窗口。",
+    "category": "售后",
+    "enabled": true,
+    "model": "snackops-fixture-v1",
+    "temperature": 0.1,
+    "maxTokens": 800,
+    "requiredTools": [
+      "query_orders",
+      "query_logistics"
+    ],
+    "version": "1.0.0",
+    "filePath": "skills/after-sales-classification/SKILL.md",
+    "updatedAt": "2026-10-18T09:35:00+08:00"
+  },
+  {
+    "id": "complaint-triage",
+    "name": "投诉分级",
+    "description": "根据食品安全、金额争议和情绪升级程度判断投诉等级与人工接管优先级。",
+    "category": "安全",
+    "enabled": true,
+    "model": "snackops-fixture-v1",
+    "temperature": 0.1,
+    "maxTokens": 800,
+    "requiredTools": [
+      "query_orders"
+    ],
+    "version": "1.0.0",
+    "filePath": "skills/complaint-triage/SKILL.md",
+    "updatedAt": "2026-10-18T09:40:00+08:00"
+  },
+  {
+    "id": "conversation-summary",
+    "name": "会话摘要",
+    "description": "压缩会话事实、用户诉求、已执行工具和待办事项，供转人工或后续复盘使用。",
+    "category": "运营",
+    "enabled": true,
+    "model": "snackops-fixture-v1",
+    "temperature": 0.2,
+    "maxTokens": 1000,
+    "requiredTools": [],
+    "version": "1.0.0",
+    "filePath": "skills/conversation-summary/SKILL.md",
+    "updatedAt": "2026-10-18T09:45:00+08:00"
+  },
+  {
+    "id": "human-handoff-decision",
+    "name": "转人工决策",
+    "description": "判断是否必须转人工，并生成包含证据、缺失信息和优先级的交接说明。",
+    "category": "安全",
+    "enabled": true,
+    "model": "snackops-fixture-v1",
+    "temperature": 0,
+    "maxTokens": 600,
+    "requiredTools": [
+      "query_orders"
+    ],
+    "version": "1.0.0",
+    "filePath": "skills/human-handoff-decision/SKILL.md",
+    "updatedAt": "2026-10-18T09:50:00+08:00"
+  },
+  {
+    "id": "gift-scenario-advisor",
+    "name": "送礼场景顾问",
+    "description": "根据收礼对象、预算、分享场景和忌口生成零食组合，避免不合适的过敏原与口味。",
+    "category": "推荐",
+    "enabled": true,
+    "model": "snackops-fixture-v1",
+    "temperature": 0.4,
+    "maxTokens": 1000,
+    "requiredTools": [
+      "query_products",
+      "query_activities",
+      "calculate_price"
+    ],
+    "version": "1.0.0",
+    "filePath": "skills/gift-scenario-advisor/SKILL.md",
+    "updatedAt": "2026-10-18T09:55:00+08:00"
+  },
+  {
+    "id": "allergy-risk-reminder",
+    "name": "过敏风险提醒",
+    "description": "基于配料、明确过敏原、可能含有信息和特殊人群场景生成安全提醒与转人工建议。",
+    "category": "安全",
+    "enabled": true,
+    "model": "snackops-fixture-v1",
+    "temperature": 0,
+    "maxTokens": 800,
+    "requiredTools": [
+      "query_products"
+    ],
+    "version": "1.0.0",
+    "filePath": "skills/allergy-risk-reminder/SKILL.md",
+    "updatedAt": "2026-10-18T10:00:00+08:00"
+  },
+  {
+    "id": "对话问候-skill",
+    "name": "对话问候",
+    "description": "以简洁、友好的方式开启或结束客服对话，不夸大身份与能力，不制造营销压力。",
+    "category": "对话",
+    "enabled": true,
+    "model": "snackops-fixture-v1",
+    "temperature": 0.3,
+    "maxTokens": 400,
+    "requiredTools": [],
+    "version": "1.0.0",
+    "filePath": "skills/对话问候-skill/SKILL.md",
+    "updatedAt": "2026-10-18T10:05:00+08:00"
+  }
+]

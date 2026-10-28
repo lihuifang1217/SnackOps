@@ -1,0 +1,77 @@
+[
+  {
+    "id": "user-01",
+    "name": "林小满",
+    "segment": "新客",
+    "phoneMasked": "138****2210",
+    "joinedAt": "2026-10-15T10:20:00+08:00",
+    "orderCount": 1,
+    "isNewCustomer": false,
+    "orderIds": ["order-20261018-001"],
+    "preferences": {
+      "flavors": ["原味", "坚果"],
+      "avoidAllergens": [],
+      "budget": 100
+    }
+  },
+  {
+    "id": "user-02",
+    "name": "周一禾",
+    "segment": "复购",
+    "phoneMasked": "139****0827",
+    "joinedAt": "2026-08-03T09:00:00+08:00",
+    "orderCount": 4,
+    "isNewCustomer": false,
+    "orderIds": ["order-20261017-014", "order-20261015-021"],
+    "preferences": {
+      "flavors": ["海盐", "香辣"],
+      "avoidAllergens": ["花生"],
+      "budget": 80
+    }
+  },
+  {
+    "id": "user-03",
+    "name": "陈麦麦",
+    "segment": "会员",
+    "phoneMasked": "186****4521",
+    "joinedAt": "2025-12-18T16:35:00+08:00",
+    "orderCount": 12,
+    "isNewCustomer": false,
+    "orderIds": ["order-20261016-008"],
+    "preferences": {
+      "flavors": ["可可", "低糖"],
+      "avoidAllergens": [],
+      "budget": 200
+    }
+  },
+  {
+    "id": "user-04",
+    "name": "许橙",
+    "segment": "新客",
+    "phoneMasked": "137****7790",
+    "joinedAt": "2026-10-18T08:05:00+08:00",
+    "orderCount": 0,
+    "isNewCustomer": true,
+    "orderIds": ["order-20261014-003"],
+    "preferences": {
+      "flavors": ["咸香", "原味"],
+      "avoidAllergens": [],
+      "budget": 60
+    }
+  },
+  {
+    "id": "user-05",
+    "name": "刘小豆",
+    "segment": "复购",
+    "phoneMasked": "150****6632",
+    "joinedAt": "2026-06-01T14:12:00+08:00",
+    "orderCount": 3,
+    "isNewCustomer": false,
+    "orderIds": [],
+    "preferences": {
+      "flavors": ["草莓", "酸甜"],
+      "avoidAllergens": ["乳制品"],
+      "budget": 50
+    }
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "enabled": true,
+  "strategy": "human-handoff",
+  "message": "这个问题需要人工核实，已为你转接客服，请稍候。",
+  "updatedAt": "2026-10-14T10:00:00+08:00"
+}

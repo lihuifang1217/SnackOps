@@ -1,0 +1,39 @@
+import { AppError } from '@/lib/errors';
+import { saveSkillVersion } from '@/lib/registry/skills';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+export async function POST(request: Request) {
+  const token = process.env.SNACKOPS_REGISTRY_TEST_TOKEN;
+  if (!token || request.headers.get('x-snackops-probe') !== token) {
+    return Response.json({ error: 'not found' }, { status: 404 });
+  }
+
+  try {
+    await saveSkillVersion('../../outside', {
+      description: 'path traversal probe',
+      model: 'snackops-fixture-v1',
+      temperature: 0.2,
+      maxTokens: 800,
+      requiredTools: [],
+      systemPrompt: '这是一段用于验证路径穿越必须被拒绝的测试提示词正文。',
+      changeNote: 'path traversal probe',
+      expectedHash: '0'.repeat(64),
+    });
+    return Response.json({ accepted: true }, { status: 500 });
+  } catch (error) {
+    if (error instanceof AppError) {
+      return Response.json(
+        {
+          rejected: true,
+          status: error.status,
+          code: error.code,
+          message: error.message,
+        },
+        { status: error.status },
+      );
+    }
+    throw error;
+  }
+}

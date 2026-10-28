@@ -1,0 +1,9 @@
+{
+  "provider": "fixture",
+  "model": "classroom-fixture-v1",
+  "temperature": 0.2,
+  "maxTokens": 1200,
+  "configured": true,
+  "managed": true,
+  "updatedAt": "2026-10-28T02:59:18.652Z"
+}

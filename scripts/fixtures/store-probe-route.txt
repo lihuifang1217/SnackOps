@@ -1,0 +1,124 @@
+import { z } from 'zod';
+import { readdir, stat } from 'node:fs/promises';
+import path from 'node:path';
+import {
+  collectionSchemas,
+  type CollectionName,
+} from '@/lib/schemas';
+import {
+  getDataDirectory,
+  readCollection,
+  readJson,
+  StoreError,
+  updateJson,
+  writeJson,
+} from '@/lib/store';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+const probeSchema = z.object({
+  count: z.number().int().nonnegative(),
+  payload: z.string(),
+});
+
+type Probe = z.infer<typeof probeSchema>;
+
+const token = process.env.SNACKOPS_STORE_TEST_TOKEN;
+
+function authorized(request: Request): boolean {
+  return Boolean(token) && request.headers.get('x-snackops-probe') === token;
+}
+
+function errorResponse(error: unknown): Response {
+  if (error instanceof StoreError) {
+    const status =
+      error.code === 'INVALID_DATA' || error.code === 'INVALID_JSON'
+        ? 400
+        : error.code === 'NOT_FOUND'
+          ? 404
+          : 500;
+    return Response.json({ error: error.message, code: error.code }, { status });
+  }
+
+  console.error('[store-probe]', error);
+  return Response.json({ error: '测试接口内部错误', code: 'INTERNAL' }, { status: 500 });
+}
+
+async function probePath(): Promise<string> {
+  return path.join(getDataDirectory(), 'probe.json');
+}
+
+export async function GET(request: Request) {
+  if (!authorized(request)) {
+    return Response.json({ error: 'not found' }, { status: 404 });
+  }
+
+  try {
+    const data = await readJson('probe.json', probeSchema);
+    const file = await probePath();
+    const fileStat = await stat(file);
+    const files = await readdir(getDataDirectory());
+
+    return Response.json({
+      ...data,
+      size: Buffer.byteLength(data.payload, 'utf8'),
+      inode: fileStat.ino,
+      temporaryFiles: files.filter((name) => name.endsWith('.tmp')),
+    });
+  } catch (error) {
+    return errorResponse(error);
+  }
+}
+
+export async function POST(request: Request) {
+  if (!authorized(request)) {
+    return Response.json({ error: 'not found' }, { status: 404 });
+  }
+
+  let body: { action?: string; count?: number };
+  try {
+    body = (await request.json()) as { action?: string; count?: number };
+  } catch {
+    return Response.json({ error: '请求体必须是 JSON', code: 'INVALID_BODY' }, { status: 400 });
+  }
+
+  try {
+    if (body.action === 'ping') {
+      return Response.json({ ok: true });
+    }
+
+    if (body.action === 'init') {
+      const value: Probe = { count: 0, payload: 'x'.repeat(32768) };
+      await writeJson('probe.json', probeSchema, value);
+      return Response.json({ ok: true, count: value.count });
+    }
+
+    if (body.action === 'increment') {
+      const next = await updateJson('probe.json', probeSchema, (current) => ({
+        ...current,
+        count: current.count + 1,
+      }));
+      return Response.json({ ok: true, count: next.count });
+    }
+
+    if (body.action === 'invalid') {
+      await writeJson(
+        'probe.json',
+        probeSchema,
+        { count: -1, payload: 42 } as unknown as Probe,
+      );
+      return Response.json({ ok: true });
+    }
+
+    if (body.action === 'validate-seeds') {
+      const names = Object.keys(collectionSchemas) as CollectionName[];
+      await Promise.all(names.map((name) => readCollection(name)));
+      return Response.json({ validated: names.length });
+    }
+
+    return Response.json({ error: '未知操作', code: 'UNKNOWN_ACTION' }, { status: 400 });
+  } catch (error) {
+    return errorResponse(error);
+  }
+}

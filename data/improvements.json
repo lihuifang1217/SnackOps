@@ -1,0 +1,56 @@
+[
+  {
+    "id": "improvement-1793154810313-e68411",
+    "title": "标注改进：低评分人工评估",
+    "source": "标注 ann-1793154090672-02340d · Run run-1793153805036-bd6fc520",
+    "sourceType": "low-annotation",
+    "direction": "Eval",
+    "description": "人工标注 overall=3，无备注",
+    "ruleCluster": false,
+    "sampleRunIds": [
+      "run-1793153805036-bd6fc520"
+    ],
+    "suggestedAction": "根据标注结果优先检查 Eval 配置，并复核该 Run。",
+    "priority": "中",
+    "status": "待处理",
+    "owner": "待分配",
+    "createdAt": "2026-10-28T02:33:30.313Z",
+    "updatedAt": "2026-10-28T02:33:30.313Z"
+  },
+  {
+    "id": "improvement-1793154212063-733836",
+    "title": "标注改进：Bad Case 人工评估",
+    "source": "标注 ann-1793154090672-ed290a · Run run-1793152845477-48867d6d",
+    "sourceType": "low-annotation",
+    "direction": "Planner",
+    "description": "人工标注 overall=3，无备注",
+    "ruleCluster": false,
+    "sampleRunIds": [
+      "run-1793152845477-48867d6d"
+    ],
+    "suggestedAction": "根据标注结果优先检查 Planner 配置，并复核该 Run。",
+    "priority": "中",
+    "status": "待处理",
+    "owner": "待分配",
+    "createdAt": "2026-10-28T02:23:32.063Z",
+    "updatedAt": "2026-10-28T02:23:32.063Z"
+  },
+  {
+    "id": "improvement-1793153848231-9e5a0d",
+    "title": "1 分客服会话：我买 3 份每日混合坚果，叠加满 99 减 20 和 SNACK20 优",
+    "source": "评分 rating-1793153848218-105d75 · Run run-1793153805036-bd6fc520",
+    "sourceType": "low-rating",
+    "direction": "Eval",
+    "description": "用户评分 1 分，问题类型为 价格优惠。",
+    "ruleCluster": false,
+    "sampleRunIds": [
+      "run-1793153805036-bd6fc520"
+    ],
+    "suggestedAction": "检查 Eval 相关配置，并回放该低分样本。",
+    "priority": "高",
+    "status": "待处理",
+    "owner": "待分配",
+    "createdAt": "2026-10-28T02:17:28.218Z",
+    "updatedAt": "2026-10-28T02:17:28.218Z"
+  }
+]

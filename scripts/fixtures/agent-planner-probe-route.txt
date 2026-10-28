@@ -1,0 +1,64 @@
+import { getEnabledCapabilities } from '@/lib/registry';
+import { detectInputSignals } from '@/lib/agent/signals';
+import { runPlanner } from '@/lib/agent/planner';
+import { validatePlan } from '@/lib/agent/validator';
+import type { LlmClient } from '@/lib/llm/types';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
+export async function POST(request: Request) {
+  const token = process.env.SNACKOPS_AGENT_TEST_TOKEN;
+  if (!token || request.headers.get('x-snackops-probe') !== token) {
+    return Response.json({ error: 'not found' }, { status: 404 });
+  }
+
+  const provider: LlmClient = {
+    info: {
+      id: 'classroom-fixture',
+      model: 'planner-probe',
+      isDemo: true,
+      source: 'request',
+      notice: 'test stub',
+    },
+    async generate() {
+      return {
+        text: '这不是合法 JSON，但服务必须安全 fallback。',
+        provider: 'classroom-fixture',
+        model: 'planner-probe',
+        isDemo: true,
+      };
+    },
+  };
+
+  const capabilities = await getEnabledCapabilities();
+  const userInput = '这个商品满 99 减 20 再用 SNACK20 优惠券，最后多少钱？';
+  const signals = detectInputSignals(userInput);
+  const planner = await runPlanner({
+    userInput,
+    conversationHistory: [],
+    availableSkills: capabilities.skills,
+    availableTools: capabilities.tools,
+    mandatoryCapabilities: signals.requiredCapabilities,
+    signals,
+    provider,
+  });
+  const tamperedPlan = {
+    ...planner.plan,
+    selectedTools: planner.plan.selectedTools.filter((tool) => tool !== 'calculate_price'),
+  };
+  const validation = validatePlan({
+    plan: tamperedPlan,
+    availableSkills: capabilities.skills,
+    availableTools: capabilities.tools,
+    mandatoryCapabilities: signals.requiredCapabilities,
+    signals,
+    parseError: planner.parseError,
+  });
+
+  return Response.json({
+    parseError: planner.parseError,
+    fallbackRequired: planner.plan.fallback?.required ?? false,
+    validatorCodes: validation.errors.map((issue) => issue.code),
+  });
+}

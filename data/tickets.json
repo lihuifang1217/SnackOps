@@ -1,0 +1,619 @@
+[
+  {
+    "id": "TK-1793156059151-2b79ec",
+    "customer": "Demo 访客",
+    "subject": "咸香，无过敏史，但对牛奶过敏",
+    "channel": "Demo",
+    "status": "待处理",
+    "priority": "紧急",
+    "skill": "need-extraction / allergy-risk-reminder / recommendation-decision / recommendation-reason / risk-check / human-handoff-decision / response-generator",
+    "assignee": "未分配",
+    "updatedAt": "2026-10-28T02:54:19.151Z",
+    "runId": "run-1793156045729-f00c1f43",
+    "conversationId": "conv-1793155990775-789d91",
+    "source": "demo",
+    "reasonCode": "allergy_safety",
+    "reason": "输入涉及高风险场景，建议人工接管或跟进。；候选回复未命中阻断规则，可以发送。",
+    "knownFacts": [
+      "风险标记：allergy_or_special_population",
+      "输入涉及高风险场景，建议人工接管或跟进。",
+      "候选回复未命中阻断规则，可以发送。",
+      "Planner 目标：在用户明确偏好咸香且对牛奶过敏的前提下，推荐可核验的零食组合并给出过敏风险提醒",
+      "risk-check：allow / medium"
+    ],
+    "missingInfo": [],
+    "suggestedQueue": "过敏与特殊人群",
+    "userMessage": "咸香，无过敏史，但对牛奶过敏",
+    "conversationHistory": [
+      {
+        "role": "user",
+        "content": "我买 3 份每日混合坚果，叠加满 99 减 20 和 SNACK20 优惠券，最后多少钱？"
+      },
+      {
+        "role": "assistant",
+        "content": "你想确认买 3 份每日混合坚果，叠加满 99 减 20 和 SNACK20 优惠券后的金额。根据商品与活动记录：每日混合坚果 25g × 7 单价 39.9 元，3 份小计 119.7 元；秋季囤货节满 99 减 20，SNACK20 券满 99 减 20，两者按规则可叠加，试算合计 79.7 元。这是只读试算，不构成下单或价格锁定承诺，实际以结算页为准。另外该商品含核桃、巴旦木、腰果，可能含花生、芝麻，如有过敏顾虑请留意。需要的话我可以继续帮你核对适用门店或下单信息。"
+      },
+      {
+        "role": "user",
+        "content": "推荐点其他零食"
+      },
+      {
+        "role": "assistant",
+        "content": "你想让我推荐其他零食，我可以帮你挑。为了推荐得更合适，想先确认两点：你偏好哪类零食（饼干、巧克力、肉制品、膨化等）或口味（咸香、香辣、低糖等）？另外是否有过敏或忌口？你之前买的每日混合坚果含核桃、巴旦木、腰果，可能含花生、芝麻，如有过敏请先告知，我会避开相关商品。告诉我偏好后，我再按在售商品帮你筛选并说明理由。"
+      },
+      {
+        "role": "user",
+        "content": "咸香，无过敏史，但对牛奶过敏"
+      },
+      {
+        "role": "assistant",
+        "content": "你想找咸香口味、同时避开牛奶的零食。根据在售商品记录，可以先看原味猪肉脯 120g：原味、标签含咸香，独立包装，售价 29.9 元，有库存。配料为猪后腿肉、白砂糖、鱼露、大豆蛋白、香辛料，未列出牛奶或乳制品。\n\n需要提醒的是，这款商品明确含大豆、鱼类，可能含小麦；页面也无法排除生产线交叉接触乳制品的可能，因此不能保证对牛奶过敏者安全。如果你对牛奶过敏较严重，建议先不要购买。\n\n由于涉及过敏原，建议转人工进一步核实该商品批次的配料与生产线信息，我会把你的过敏情况一并转交。"
+      }
+    ]
+  },
+  {
+    "id": "TK-1793155318400-b07996",
+    "customer": "Demo 访客",
+    "subject": "给同事买点不辣的办公室零食，预算 100 元以内。",
+    "channel": "Demo",
+    "status": "待处理",
+    "priority": "紧急",
+    "skill": "need-extraction / recommendation-decision / recommendation-reason / response-generator / risk-check",
+    "assignee": "未分配",
+    "updatedAt": "2026-10-28T02:41:58.400Z",
+    "runId": "run-1793155308857-0e7d047c",
+    "conversationId": "conv-1793155308857-eb913f",
+    "source": "demo",
+    "reasonCode": "human_review",
+    "reason": "需要人工进一步跟进",
+    "knownFacts": [
+      "风险标记：recommendation",
+      "Planner 目标：为同事挑选不辣、预算100元以内的办公室零食组合并给出可核验推荐",
+      "risk-check：block / high"
+    ],
+    "missingInfo": [
+      "用户身份与事实证据需人工核验"
+    ],
+    "suggestedQueue": "人工客服",
+    "userMessage": "给同事买点不辣的办公室零食，预算 100 元以内。",
+    "conversationHistory": [
+      {
+        "role": "user",
+        "content": "给同事买点不辣的办公室零食，预算 100 元以内。"
+      },
+      {
+        "role": "assistant",
+        "content": "这次请求没有通过必要的安全校验，我不会继续自动处理。请稍后重试，或转人工进一步核实。"
+      }
+    ]
+  },
+  {
+    "id": "TK-1793154909925-56bcd4",
+    "customer": "Demo 访客",
+    "subject": "预算100以内",
+    "channel": "Demo",
+    "status": "待处理",
+    "priority": "紧急",
+    "skill": "need-extraction / recommendation-decision / recommendation-reason / response-generator / risk-check",
+    "assignee": "未分配",
+    "updatedAt": "2026-10-28T02:35:09.925Z",
+    "runId": "run-1793154899648-10e1dff9",
+    "conversationId": "conv-1793154837915-6f05ca",
+    "source": "demo",
+    "reasonCode": "human_review",
+    "reason": "需要人工进一步跟进",
+    "knownFacts": [
+      "风险标记：recommendation",
+      "Planner 目标：在100元预算内、无过敏限制下为用户推荐零食组合并给出可核验理由",
+      "risk-check：block / high"
+    ],
+    "missingInfo": [
+      "用户身份与事实证据需人工核验"
+    ],
+    "suggestedQueue": "人工客服",
+    "userMessage": "预算100以内",
+    "conversationHistory": [
+      {
+        "role": "user",
+        "content": "帮我推荐点零食"
+      },
+      {
+        "role": "assistant",
+        "content": "好的，我来帮你推荐零食。为了推荐得更合适，想先确认两点：一是有没有需要避开的过敏原或忌口？现有零食可能含坚果、花生、小麦、乳制品、大豆、鱼类等；二是这次买零食的预算大概是多少？确认后我再按你的情况挑几款。"
+      },
+      {
+        "role": "user",
+        "content": "无过敏"
+      },
+      {
+        "role": "assistant",
+        "content": "好的，已了解你没有需要避开的过敏原。为了推荐更合适的组合，想再确认一下：这次买零食的预算大概是多少？比如 50 元以内、50-100 元、100 元以上，或没有特别限制。\n\n另外提醒一下，虽然你没有过敏，但商品配料和包装上标注的「可能含有」信息仍建议以实际包装为准，无法保证完全没有交叉接触的风险。\n\n你告诉我预算后，我再按你的情况挑选合适的零食。"
+      },
+      {
+        "role": "user",
+        "content": "预算100以内"
+      },
+      {
+        "role": "assistant",
+        "content": "这次请求没有通过必要的安全校验，我不会继续自动处理。请稍后重试，或转人工进一步核实。"
+      }
+    ]
+  },
+  {
+    "id": "TK-1793154868956-6a13e7",
+    "customer": "Demo 访客",
+    "subject": "无过敏",
+    "channel": "Demo",
+    "status": "待处理",
+    "priority": "紧急",
+    "skill": "need-extraction / clarification-question / recommendation-decision / recommendation-reason / allergy-risk-reminder / human-handoff-decision / response-generator / risk-check",
+    "assignee": "未分配",
+    "updatedAt": "2026-10-28T02:34:28.956Z",
+    "runId": "run-1793154857869-46d7f326",
+    "conversationId": "conv-1793154837915-6f05ca",
+    "source": "demo",
+    "reasonCode": "allergy_safety",
+    "reason": "输入涉及高风险场景，建议人工接管或跟进。；候选回复未命中阻断规则，可以发送。",
+    "knownFacts": [
+      "风险标记：allergy_or_special_population",
+      "输入涉及高风险场景，建议人工接管或跟进。",
+      "候选回复未命中阻断规则，可以发送。",
+      "Planner 目标：在用户确认无过敏后，补齐预算信息并推荐符合约束的零食组合",
+      "risk-check：allow / medium"
+    ],
+    "missingInfo": [],
+    "suggestedQueue": "过敏与特殊人群",
+    "userMessage": "无过敏",
+    "conversationHistory": [
+      {
+        "role": "user",
+        "content": "帮我推荐点零食"
+      },
+      {
+        "role": "assistant",
+        "content": "好的，我来帮你推荐零食。为了推荐得更合适，想先确认两点：一是有没有需要避开的过敏原或忌口？现有零食可能含坚果、花生、小麦、乳制品、大豆、鱼类等；二是这次买零食的预算大概是多少？确认后我再按你的情况挑几款。"
+      },
+      {
+        "role": "user",
+        "content": "无过敏"
+      },
+      {
+        "role": "assistant",
+        "content": "好的，已了解你没有需要避开的过敏原。为了推荐更合适的组合，想再确认一下：这次买零食的预算大概是多少？比如 50 元以内、50-100 元、100 元以上，或没有特别限制。\n\n另外提醒一下，虽然你没有过敏，但商品配料和包装上标注的「可能含有」信息仍建议以实际包装为准，无法保证完全没有交叉接触的风险。\n\n你告诉我预算后，我再按你的情况挑选合适的零食。"
+      }
+    ]
+  },
+  {
+    "id": "TK-1793154060637-4561ec",
+    "customer": "Agent 工作台用户",
+    "subject": "收到短信说我中奖了，让我提供验证码并转账保证金，是真的吗？",
+    "channel": "Agent 工作台",
+    "status": "待处理",
+    "priority": "紧急",
+    "skill": "need-extraction / risk-check / human-handoff-decision / response-generator",
+    "assignee": "未分配",
+    "updatedAt": "2026-10-28T02:21:00.637Z",
+    "runId": "run-1793154054082-c9c6d1bd",
+    "conversationId": "conv-1793154034977-d7438f",
+    "source": "workbench",
+    "reasonCode": "fraud_suspected",
+    "reason": "输入涉及高风险场景，建议人工接管或跟进。；候选回复未命中阻断规则，可以发送。",
+    "knownFacts": [
+      "风险标记：fraud_suspected",
+      "输入涉及高风险场景，建议人工接管或跟进。",
+      "候选回复未命中阻断规则，可以发送。",
+      "Planner 目标：识别疑似中奖诈骗短信，提醒用户不要转账或提供验证码，并转人工核验",
+      "risk-check：allow / high"
+    ],
+    "missingInfo": [
+      "用户身份与事实证据需人工核验"
+    ],
+    "suggestedQueue": "安全核验",
+    "userMessage": "收到短信说我中奖了，让我提供验证码并转账保证金，是真的吗？",
+    "conversationHistory": [
+      {
+        "role": "user",
+        "content": "帮我查一下订单 SN202610170014 的物流到哪了？"
+      },
+      {
+        "role": "assistant",
+        "content": "已帮你核对订单 SN202610170014 的物流信息：该订单已发货，由顺丰速运承运，运单号 SF143820261017，目前状态为运输中，最新进展是快件已到达上海转运中心（更新于 10 月 18 日 08:15）。你可以留意后续派送通知；如需我继续帮你核对派送进度或订单其他信息，可以告诉我。"
+      },
+      {
+        "role": "user",
+        "content": "收到短信说我中奖了，让我提供验证码并转账保证金，是真的吗？"
+      },
+      {
+        "role": "assistant",
+        "content": "你问的这条中奖短信，很可能是诈骗信息，建议先不要提供验证码，也不要转账或点击短信中的链接。正规中奖不会要求你先交保证金，也不会索要短信验证码。\n\n这类情况需要人工进一步核实，我会把你描述的情况转交到诈骗与安全核验队列。如果方便，可以补充短信发送号码、短信内容，以及你是否已经提供验证码或转账，便于人工判断风险。"
+      }
+    ]
+  },
+  {
+    "id": "TK-1793153950265-364abb",
+    "customer": "Agent 工作台用户",
+    "subject": "帮我查一下订单 SN202610170014 的物流到哪了？",
+    "channel": "Agent 工作台",
+    "status": "待处理",
+    "priority": "普通",
+    "skill": "need-extraction / response-generator / risk-check",
+    "assignee": "未分配",
+    "updatedAt": "2026-10-28T02:19:10.265Z",
+    "runId": "run-1793153948215-57a21a1b",
+    "conversationId": "conv-1793153948216-cae667",
+    "source": "workbench",
+    "reasonCode": "logistics",
+    "reason": "计划或执行未满足前置条件，未发送未经审核的候选回复。",
+    "knownFacts": [
+      "订单号：SN202610170014",
+      "风险标记：order_lookup",
+      "风险标记：logistics_lookup",
+      "计划或执行未满足前置条件，未发送未经审核的候选回复。",
+      "Planner 目标：查询订单 SN202610170014 的物流进度并回复用户",
+      "risk-check：block / high"
+    ],
+    "missingInfo": [
+      "运单号",
+      "用户身份与事实证据需人工核验"
+    ],
+    "suggestedQueue": "订单物流",
+    "userMessage": "帮我查一下订单 SN202610170014 的物流到哪了？",
+    "conversationHistory": [
+      {
+        "role": "user",
+        "content": "帮我查一下订单 SN202610170014 的物流到哪了？"
+      },
+      {
+        "role": "assistant",
+        "content": "这次请求没有通过必要的安全校验，我不会继续自动处理。请稍后重试，或转人工进一步核实。"
+      }
+    ]
+  },
+  {
+    "id": "TK-1793153893528-664736",
+    "customer": "Agent 工作台用户",
+    "subject": "帮我查一下订单 SN202610170014 的物流到哪了？",
+    "channel": "Agent 工作台",
+    "status": "待处理",
+    "priority": "普通",
+    "skill": "need-extraction / response-generator / risk-check",
+    "assignee": "未分配",
+    "updatedAt": "2026-10-28T02:18:13.528Z",
+    "runId": "run-1793153891897-7d856c1e",
+    "conversationId": "conv-1793153891897-1e4d05",
+    "source": "workbench",
+    "reasonCode": "logistics",
+    "reason": "计划或执行未满足前置条件，未发送未经审核的候选回复。",
+    "knownFacts": [
+      "订单号：SN202610170014",
+      "风险标记：order_lookup",
+      "风险标记：logistics_lookup",
+      "计划或执行未满足前置条件，未发送未经审核的候选回复。",
+      "Planner 目标：查询订单 SN202610170014 的物流进度并回复用户",
+      "risk-check：block / high"
+    ],
+    "missingInfo": [
+      "运单号",
+      "用户身份与事实证据需人工核验"
+    ],
+    "suggestedQueue": "订单物流",
+    "userMessage": "帮我查一下订单 SN202610170014 的物流到哪了？",
+    "conversationHistory": [
+      {
+        "role": "user",
+        "content": "帮我查一下订单 SN202610170014 的物流到哪了？"
+      },
+      {
+        "role": "assistant",
+        "content": "这次请求没有通过必要的安全校验，我不会继续自动处理。请稍后重试，或转人工进一步核实。"
+      }
+    ]
+  },
+  {
+    "id": "TK-1793153710018-798fc0",
+    "customer": "Agent 工作台用户",
+    "subject": "给同事买点不辣的办公室零食，预算 100 元以内。",
+    "channel": "Agent 工作台",
+    "status": "待处理",
+    "priority": "紧急",
+    "skill": "need-extraction / recommendation-decision / recommendation-reason / response-generator / risk-check / clarification-question",
+    "assignee": "未分配",
+    "updatedAt": "2026-10-28T02:15:10.018Z",
+    "runId": "run-1793153699372-61e1057b",
+    "conversationId": "conv-1793153699372-974b94",
+    "source": "workbench",
+    "reasonCode": "human_review",
+    "reason": "需要人工进一步跟进",
+    "knownFacts": [
+      "风险标记：recommendation",
+      "Planner 目标：为同事挑选不辣的办公室零食，预算100元以内，并给出可核验的推荐组合与理由",
+      "risk-check：block / high"
+    ],
+    "missingInfo": [
+      "用户身份与事实证据需人工核验"
+    ],
+    "suggestedQueue": "人工客服",
+    "userMessage": "给同事买点不辣的办公室零食，预算 100 元以内。",
+    "conversationHistory": [
+      {
+        "role": "user",
+        "content": "给同事买点不辣的办公室零食，预算 100 元以内。"
+      },
+      {
+        "role": "assistant",
+        "content": "这次请求没有通过必要的安全校验，我不会继续自动处理。请稍后重试，或转人工进一步核实。"
+      }
+    ]
+  },
+  {
+    "id": "TK-1793152847787-74289a",
+    "customer": "Agent 工作台用户",
+    "subject": "给同事买点不辣的办公室零食，预算 100 元以内。",
+    "channel": "Agent 工作台",
+    "status": "待处理",
+    "priority": "紧急",
+    "skill": "skill:need-extraction / skill:recommendation-decision / skill:recommendation-reason / skill:response-generator / skill:risk-check",
+    "assignee": "未分配",
+    "updatedAt": "2026-10-28T02:00:47.787Z",
+    "runId": "run-1793152845477-48867d6d",
+    "conversationId": "conv-1793152845477-9532a6",
+    "source": "workbench",
+    "reasonCode": "human_review",
+    "reason": "计划或执行未满足前置条件，未发送未经审核的候选回复。",
+    "knownFacts": [
+      "风险标记：recommendation",
+      "计划或执行未满足前置条件，未发送未经审核的候选回复。",
+      "Planner 目标：为同事挑选预算100元以内、不辣的办公室零食组合并给出可核验推荐",
+      "risk-check：block / high"
+    ],
+    "missingInfo": [
+      "用户身份与事实证据需人工核验"
+    ],
+    "suggestedQueue": "人工客服",
+    "userMessage": "给同事买点不辣的办公室零食，预算 100 元以内。",
+    "conversationHistory": [
+      {
+        "role": "user",
+        "content": "给同事买点不辣的办公室零食，预算 100 元以内。"
+      },
+      {
+        "role": "assistant",
+        "content": "这次请求没有通过必要的安全校验，我不会继续自动处理。请稍后重试，或转人工进一步核实。"
+      }
+    ]
+  },
+  {
+    "id": "TK-1793112977616-1e4d54",
+    "customer": "在线用户",
+    "subject": "我要投诉，饼干碎了还有食品安全问题。",
+    "channel": "小程序",
+    "status": "待处理",
+    "priority": "紧急",
+    "skill": "need-extraction / human-handoff-decision / complaint-triage / response-generator / risk-check",
+    "assignee": "未分配",
+    "updatedAt": "2026-10-27T14:56:17.616Z",
+    "runId": "run-1793112977438-277eaefc",
+    "conversationId": "conv-1793112977438-b5a688",
+    "source": "api",
+    "reasonCode": "complaint",
+    "reason": "用户要求人工处理食品安全投诉",
+    "knownFacts": [
+      "风险标记：complaint_or_food_safety",
+      "输入涉及高风险场景，建议人工接管或跟进。",
+      "候选回复未命中阻断规则，可以发送。",
+      "Planner 目标：安抚投诉并判断人工接管",
+      "risk-check：allow / high"
+    ],
+    "missingInfo": [
+      "运单号",
+      "用户身份与事实证据需人工核验",
+      "高风险场景，将在执行后转入人工跟进"
+    ],
+    "suggestedQueue": "投诉处理",
+    "userMessage": "我要投诉，饼干碎了还有食品安全问题。",
+    "conversationHistory": [
+      {
+        "role": "user",
+        "content": "我要投诉，饼干碎了还有食品安全问题。"
+      },
+      {
+        "role": "assistant",
+        "content": "很抱歉给你带来困扰。这个情况需要人工进一步核实，我先为你转接，不会要求你自行联系快递或反复重复描述。"
+      }
+    ]
+  },
+  {
+    "id": "TK-1793112969641-b2b79b",
+    "customer": "Demo 访客",
+    "subject": "收到短信说我中奖了，让我提供验证码并转账保证金，是真的吗？",
+    "channel": "Demo",
+    "status": "待处理",
+    "priority": "紧急",
+    "skill": "need-extraction / human-handoff-decision / response-generator / risk-check",
+    "assignee": "未分配",
+    "updatedAt": "2026-10-27T14:56:09.641Z",
+    "runId": "run-1793112969490-1d933c7d",
+    "conversationId": "conv-1793112969490-a98c08",
+    "source": "demo",
+    "reasonCode": "fraud_suspected",
+    "reason": "输入涉及高风险场景，建议人工接管或跟进。；候选回复未命中阻断规则，可以发送。",
+    "knownFacts": [
+      "风险标记：fraud_suspected",
+      "输入涉及高风险场景，建议人工接管或跟进。",
+      "候选回复未命中阻断规则，可以发送。",
+      "Planner 目标：识别疑似中奖诈骗并生成安全提醒",
+      "risk-check：allow / high"
+    ],
+    "missingInfo": [
+      "订单号",
+      "用户身份与事实证据需人工核验",
+      "高风险场景，将在执行后转入人工跟进"
+    ],
+    "suggestedQueue": "安全核验",
+    "userMessage": "收到短信说我中奖了，让我提供验证码并转账保证金，是真的吗？",
+    "conversationHistory": [
+      {
+        "role": "user",
+        "content": "收到短信说我中奖了，让我提供验证码并转账保证金，是真的吗？"
+      },
+      {
+        "role": "assistant",
+        "content": "这很可能是诈骗。请不要转账、不要提供验证码、银行卡密码或身份证信息，也不要点击陌生链接或共享屏幕。请通过 SnackOps 官方渠道核实订单；如已产生损失，建议立即联系平台并报警。"
+      }
+    ]
+  },
+  {
+    "id": "TK-1793112969447-e5bfa6",
+    "customer": "Agent 工作台用户",
+    "subject": "收到短信说我中奖了，让我提供验证码并转账保证金，是真的吗？",
+    "channel": "Agent 工作台",
+    "status": "待处理",
+    "priority": "紧急",
+    "skill": "need-extraction / human-handoff-decision / response-generator / risk-check",
+    "assignee": "未分配",
+    "updatedAt": "2026-10-27T14:56:09.446Z",
+    "runId": "run-1793112969261-c6f88df5",
+    "conversationId": "conv-1793112969261-dc770f",
+    "source": "workbench",
+    "reasonCode": "fraud_suspected",
+    "reason": "输入涉及高风险场景，建议人工接管或跟进。；候选回复未命中阻断规则，可以发送。",
+    "knownFacts": [
+      "风险标记：fraud_suspected",
+      "输入涉及高风险场景，建议人工接管或跟进。",
+      "候选回复未命中阻断规则，可以发送。",
+      "Planner 目标：识别疑似中奖诈骗并生成安全提醒",
+      "risk-check：allow / high"
+    ],
+    "missingInfo": [
+      "订单号",
+      "用户身份与事实证据需人工核验",
+      "高风险场景，将在执行后转入人工跟进"
+    ],
+    "suggestedQueue": "安全核验",
+    "userMessage": "收到短信说我中奖了，让我提供验证码并转账保证金，是真的吗？",
+    "conversationHistory": [
+      {
+        "role": "user",
+        "content": "收到短信说我中奖了，让我提供验证码并转账保证金，是真的吗？"
+      },
+      {
+        "role": "assistant",
+        "content": "这很可能是诈骗。请不要转账、不要提供验证码、银行卡密码或身份证信息，也不要点击陌生链接或共享屏幕。请通过 SnackOps 官方渠道核实订单；如已产生损失，建议立即联系平台并报警。"
+      }
+    ]
+  },
+  {
+    "id": "TK-1001",
+    "customer": "林小满",
+    "subject": "订单大概什么时候发货？",
+    "channel": "小程序",
+    "status": "待处理",
+    "priority": "普通",
+    "skill": "订单与物流查询",
+    "assignee": "未分配",
+    "updatedAt": "2026-10-18T14:12:00+08:00",
+    "source": "manual",
+    "reasonCode": "manual_handoff",
+    "reason": "",
+    "knownFacts": [],
+    "missingInfo": [],
+    "suggestedQueue": "人工客服",
+    "userMessage": "",
+    "conversationHistory": []
+  },
+  {
+    "id": "TK-1002",
+    "customer": "周一禾",
+    "subject": "混合坚果里面有没有花生？",
+    "channel": "淘宝",
+    "status": "处理中",
+    "priority": "紧急",
+    "skill": "商品推荐",
+    "assignee": "运营-小乔",
+    "updatedAt": "2026-10-18T13:38:00+08:00",
+    "source": "manual",
+    "reasonCode": "manual_handoff",
+    "reason": "",
+    "knownFacts": [],
+    "missingInfo": [],
+    "suggestedQueue": "人工客服",
+    "userMessage": "",
+    "conversationHistory": []
+  },
+  {
+    "id": "TK-1003",
+    "customer": "陈麦麦",
+    "subject": "满减券和会员折扣能一起用吗？",
+    "channel": "抖音",
+    "status": "待处理",
+    "priority": "普通",
+    "skill": "优惠咨询",
+    "assignee": "未分配",
+    "updatedAt": "2026-10-18T12:05:00+08:00",
+    "source": "manual",
+    "reasonCode": "manual_handoff",
+    "reason": "",
+    "knownFacts": [],
+    "missingInfo": [],
+    "suggestedQueue": "人工客服",
+    "userMessage": "",
+    "conversationHistory": []
+  },
+  {
+    "id": "TK-1004",
+    "customer": "刘小豆",
+    "subject": "草莓脆少发了一包，要求补发",
+    "channel": "京东",
+    "status": "待处理",
+    "priority": "紧急",
+    "skill": "售后分流",
+    "assignee": "未分配",
+    "updatedAt": "2026-10-18T11:20:00+08:00",
+    "source": "manual",
+    "reasonCode": "manual_handoff",
+    "reason": "",
+    "knownFacts": [],
+    "missingInfo": [],
+    "suggestedQueue": "人工客服",
+    "userMessage": "",
+    "conversationHistory": []
+  },
+  {
+    "id": "TK-1005",
+    "customer": "许橙",
+    "subject": "物流显示地址异常，怎么处理？",
+    "channel": "小程序",
+    "status": "处理中",
+    "priority": "紧急",
+    "skill": "订单与物流查询",
+    "assignee": "客服-阿岚",
+    "updatedAt": "2026-10-18T10:16:00+08:00",
+    "source": "manual",
+    "reasonCode": "manual_handoff",
+    "reason": "",
+    "knownFacts": [],
+    "missingInfo": [],
+    "suggestedQueue": "人工客服",
+    "userMessage": "",
+    "conversationHistory": []
+  },
+  {
+    "id": "TK-1006",
+    "customer": "赵米",
+    "subject": "想给同事买一份不辣的零食礼包",
+    "channel": "淘宝",
+    "status": "已解决",
+    "priority": "普通",
+    "skill": "商品推荐",
+    "assignee": "客服-阿岚",
+    "updatedAt": "2026-10-17T18:42:00+08:00",
+    "source": "manual",
+    "reasonCode": "manual_handoff",
+    "reason": "",
+    "knownFacts": [],
+    "missingInfo": [],
+    "suggestedQueue": "人工客服",
+    "userMessage": "",
+    "conversationHistory": []
+  }
+]
