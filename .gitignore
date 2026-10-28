@@ -26,3 +26,6 @@ next-env.d.ts
 .DS_Store
 *.log
 
+# atomic-write leftovers inside the JSON data directory
+/data/.*.tmp
+

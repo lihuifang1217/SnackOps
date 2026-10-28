@@ -1,7 +1,8 @@
 import { spawn } from 'node:child_process';
 
 const mode = process.argv[2];
-const port = process.env.DEPLOY_RUN_PORT || '5000';
+// DEPLOY_RUN_PORT 优先；托管环境通常注入标准 PORT，二者都未提供时回落到 5000。
+const port = process.env.DEPLOY_RUN_PORT || process.env.PORT || '5000';
 const numericPort = Number(port);
 
 if (!['dev', 'start'].includes(mode)) {
