@@ -316,6 +316,178 @@ export async function saveSkillVersion(
   });
 }
 
+const skillDraftSchema = z.object({
+  systemPrompt: z.string().min(20).max(50000),
+  changeNote: z.string().trim().min(1).max(500),
+  expectedHash: z.string().min(16).max(128),
+});
+
+/**
+ * 创建“待确认”的版本快照：只写 skill-versions，不修改生产 Skill Prompt。
+ * A/B 草稿的 B 版本由此产生，用户确认后再由 applyDraftSkillVersion 提升为当前版本。
+ */
+export async function createDraftSkillVersion(
+  skillId: string,
+  raw: unknown,
+): Promise<SkillVersionDetail> {
+  validateSkillId(skillId);
+  const input = skillDraftSchema.parse(raw);
+
+  return withRegistryLock('skills-registry', async () => {
+    const [skills, versions] = await Promise.all([
+      readCollection('skills'),
+      readCollection('skill-versions'),
+    ]);
+    const current = skills.find((item) => item.id === skillId);
+    if (!current) throw new AppError(404, 'SKILL_NOT_FOUND', 'Skill 不存在');
+    const currentPrompt = await readSkillPrompt(current);
+    const currentHash = computeRevisionHash(current, currentPrompt);
+    if (currentHash !== input.expectedHash) {
+      throw new AppError(409, 'REVISION_CONFLICT', 'Skill 已被其他操作更新，请重新生成草案', {
+        expectedHash: input.expectedHash,
+        currentHash,
+      });
+    }
+    const prompt = normalizePrompt(input.systemPrompt);
+    const hash = computeRevisionHash(current, prompt);
+    if (hash === currentHash) {
+      throw new AppError(400, 'NO_SKILL_CHANGES', 'Prompt 没有变化，无法创建版本');
+    }
+    const existing = versions.find(
+      (version) => version.skillId === skillId && version.status === '草稿' && version.hash === hash,
+    );
+    if (existing) return versionDetail(existing);
+
+    const draftSkill: Skill = { ...current, version: nextPatchVersion(current.version) };
+    const draft = buildSnapshot(draftSkill, prompt, hash, {
+      status: '草稿',
+      changeNote: input.changeNote,
+      createdBy: '运营管理员',
+      createdAt: new Date().toISOString(),
+    });
+    await writeCollection('skill-versions', [draft, ...versions]);
+    return versionDetail(draft);
+  });
+}
+
+/** 将 A/B 草稿版本正式提升为当前版本，同时保留旧版本快照。 */
+export async function applyDraftSkillVersion(
+  skillId: string,
+  versionId: string,
+  input: { expectedHash?: string; changeNote?: string } = {},
+): Promise<SkillDetail> {
+  validateSkillId(skillId);
+  return withRegistryLock('skills-registry', async () => {
+    const [skills, versions] = await Promise.all([
+      readCollection('skills'),
+      readCollection('skill-versions'),
+    ]);
+    const current = skills.find((item) => item.id === skillId);
+    if (!current) throw new AppError(404, 'SKILL_NOT_FOUND', 'Skill 不存在');
+    const draft = versions.find(
+      (version) => version.id === versionId && version.skillId === skillId && version.status === '草稿',
+    );
+    if (!draft) throw new AppError(404, 'SKILL_VERSION_NOT_FOUND', '可应用的 A/B 草稿版本不存在');
+    const currentPrompt = await readSkillPrompt(current);
+    const currentHash = computeRevisionHash(current, currentPrompt);
+    if (input.expectedHash && input.expectedHash !== currentHash) {
+      throw new AppError(409, 'REVISION_CONFLICT', 'Skill 已被其他操作更新，请重新确认 A/B 草稿', {
+        expectedHash: input.expectedHash,
+        currentHash,
+      });
+    }
+    const now = new Date().toISOString();
+    const newSkill: Skill = {
+      ...current,
+      name: draft.name,
+      description: draft.description,
+      enabled: draft.enabled,
+      model: draft.model,
+      temperature: draft.temperature,
+      maxTokens: draft.maxTokens,
+      requiredTools: draft.requiredTools,
+      version: draft.version,
+      filePath: draft.filePath,
+      updatedAt: now,
+    };
+    const nextVersions = versions.map((version) => {
+      if (version.skillId !== skillId) return version;
+      if (version.id === draft.id) {
+        return {
+          ...version,
+          status: '当前' as const,
+          changeNote: input.changeNote?.trim() || version.changeNote,
+        };
+      }
+      return { ...version, status: '历史' as const };
+    });
+    try {
+      await writeSkillPrompt(newSkill, draft.systemPrompt);
+      await writeCollection('skills', skills.map((item) => (item.id === skillId ? newSkill : item)));
+      await writeCollection('skill-versions', nextVersions);
+    } catch (error) {
+      await writeSkillPrompt(current, currentPrompt).catch(() => undefined);
+      await writeCollection('skills', skills).catch(() => undefined);
+      throw error;
+    }
+    return detailFrom(newSkill, draft.systemPrompt);
+  });
+}
+
+export async function applySkillVersion(skillId: string, versionId: string): Promise<SkillDetail> {
+  validateSkillId(skillId);
+  return withRegistryLock('skills-registry', async () => {
+    const [skills, versions] = await Promise.all([
+      readCollection('skills'),
+      readCollection('skill-versions'),
+    ]);
+    const current = skills.find((item) => item.id === skillId);
+    if (!current) throw new AppError(404, 'SKILL_NOT_FOUND', 'Skill 不存在');
+    const selected = versions.find(
+      (version) =>
+        version.id === versionId &&
+        version.skillId === skillId &&
+        version.status !== '草稿',
+    );
+    if (!selected) {
+      throw new AppError(404, 'SKILL_VERSION_NOT_FOUND', '可应用的 Skill 版本不存在');
+    }
+    if (selected.status === '当前') {
+      const prompt = await readSkillPrompt(current);
+      return detailFrom(current, prompt);
+    }
+    const currentPrompt = await readSkillPrompt(current);
+    const now = new Date().toISOString();
+    const nextSkill: Skill = {
+      ...current,
+      name: selected.name,
+      description: selected.description,
+      enabled: selected.enabled,
+      model: selected.model,
+      temperature: selected.temperature,
+      maxTokens: selected.maxTokens,
+      requiredTools: selected.requiredTools,
+      version: selected.version,
+      filePath: selected.filePath,
+      updatedAt: now,
+    };
+    const nextVersions = versions.map((version) => {
+      if (version.skillId !== skillId) return version;
+      return { ...version, status: version.id === selected.id ? ('当前' as const) : ('历史' as const) };
+    });
+    try {
+      await writeSkillPrompt(nextSkill, selected.systemPrompt);
+      await writeCollection('skills', skills.map((item) => (item.id === skillId ? nextSkill : item)));
+      await writeCollection('skill-versions', nextVersions);
+    } catch (error) {
+      await writeSkillPrompt(current, currentPrompt).catch(() => undefined);
+      await writeCollection('skills', skills).catch(() => undefined);
+      throw error;
+    }
+    return detailFrom(nextSkill, selected.systemPrompt);
+  });
+}
+
 export async function listSkillVersions(skillId: string): Promise<SkillVersionSummary[]> {
   validateSkillId(skillId);
   await requireSkill(skillId);

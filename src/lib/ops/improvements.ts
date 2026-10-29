@@ -302,7 +302,10 @@ ${samples || '- 无关联样本'}
 - 应用会创建当前 Skill 的新版本，并保留修改前版本快照。`;
 }
 
-export async function generatePromptDraft(raw: unknown): Promise<PromptDraftResponse> {
+export async function generatePromptDraft(
+  raw: unknown,
+  options: { persist?: boolean } = {},
+): Promise<PromptDraftResponse> {
   const input = promptDraftRequestSchema.parse(raw);
   const center = await getImprovementCenter();
   const { improvement, cluster } = findDraftSource(
@@ -339,7 +342,7 @@ export async function generatePromptDraft(raw: unknown): Promise<PromptDraftResp
     unchanged: diff.filter((line) => line.type === 'context').length,
   };
 
-  if (improvement) {
+  if (improvement && options.persist !== false) {
     await updateCollection('improvements', (current) =>
       current.map((item) =>
         item.id === improvement.id

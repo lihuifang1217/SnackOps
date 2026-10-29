@@ -1,5 +1,556 @@
 [
   {
+    "id": "run-1793187262437-ba92d797",
+    "question": "给同事买点不辣的办公室零食，预算 100 元以内。",
+    "source": "api",
+    "conversationId": "conv-1793187262437-cc3e8d",
+    "conversationHistory": [],
+    "ticketId": null,
+    "createdAt": "2026-10-28T11:34:22.437Z",
+    "status": "成功",
+    "finalReply": "可以看看这几款：每日混合坚果 25g × 7，39.90 元，原味烘焙，标签：独立包装、办公室；72% 黑巧克力 100g，26.50 元，浓郁可可，标签：低糖、办公室。需要注意，相关商品含有的过敏原或可能含有信息包括：核桃、巴旦木、腰果、花生、芝麻、乳制品、大豆、坚果。如果涉及儿童、孕妇或明确过敏，建议先转人工确认配料和批次。以上价格来自当前商品数据，实际优惠以结算页为准。",
+    "plan": {
+      "goal": "基于真实商品与偏好生成零食推荐",
+      "selectedSkills": [
+        "need-extraction",
+        "recommendation-decision",
+        "recommendation-reason",
+        "response-generator",
+        "risk-check"
+      ],
+      "selectedTools": [
+        "query_products",
+        "query_activities",
+        "query_coupons"
+      ],
+      "reasoning": "识别场景为 recommendation。 已选择的 Skill 均来自当前启用清单，共 5 个；Tool 共 3 个。",
+      "mandatoryCapabilities": [
+        "skill:need-extraction",
+        "skill:response-generator",
+        "skill:risk-check",
+        "skill:recommendation-decision",
+        "skill:recommendation-reason",
+        "tool:query_products"
+      ],
+      "risk": {
+        "level": "low",
+        "flags": [
+          "recommendation"
+        ],
+        "requiresHumanHandoff": false,
+        "notes": []
+      },
+      "fallback": null
+    },
+    "validation": {
+      "valid": true,
+      "errors": [],
+      "warnings": [],
+      "checkedAt": "2026-10-28T11:34:22.509Z"
+    },
+    "steps": [
+      {
+        "id": "step-1",
+        "index": 0,
+        "type": "skill",
+        "capabilityId": "need-extraction",
+        "title": "需求提取",
+        "input": {
+          "userInput": "给同事买点不辣的办公室零食，预算 100 元以内。",
+          "planGoal": "基于真实商品与偏好生成零食推荐",
+          "toolResultIds": [],
+          "candidateIncluded": false
+        },
+        "output": "{\n  \"intent\": \"recommendation\",\n  \"productPreferences\": {\n    \"categories\": [\n      \"零食\"\n    ],\n    \"flavors\": [\n      \"不辣\"\n    ],\n    \"tags\": [\n      \"办公室\"\n    ],\n    \"budget\": 100,\n    \"quantity\": null,\n    \"scenario\": \"同事分享\"\n  },\n  \"safetyConstraints\": {\n    \"allergens\": [],\n    \"specialPopulation\": [],\n    \"avoidIngredients\": []\n  },\n  \"orderReferences\": {\n    \"orderNo\": null,\n    \"trackingNo\": null,\n    \"productNames\": []\n  },\n  \"riskFlags\": [\n    \"recommendation\"\n  ],\n  \"missingInfo\": [],\n  \"nextAction\": \"recommendation\",\n  \"summary\": \"给同事买点不辣的办公室零食，预算 100 元以内。\"\n}",
+        "durationMs": 1,
+        "status": "SUCCESS",
+        "error": null,
+        "startedAt": "2026-10-28T11:34:22.554Z",
+        "finishedAt": "2026-10-28T11:34:22.555Z",
+        "provider": "classroom-fixture",
+        "model": "classroom-fixture-v1",
+        "version": "1.0.0",
+        "hash": "0f888bf5fdbcb910133fe586f4c6bbc41508c78eca339eccbdf658f5395bd8b4"
+      },
+      {
+        "id": "step-2",
+        "index": 1,
+        "type": "tool",
+        "capabilityId": "query_products",
+        "title": "商品查询",
+        "input": {
+          "keyword": "坚果",
+          "onlyInStock": true,
+          "limit": 8
+        },
+        "output": {
+          "items": [
+            {
+              "id": "prod-01",
+              "name": "每日混合坚果 25g × 7",
+              "description": "独立小包装原味烘焙坚果，适合办公室与通勤加餐。",
+              "category": "坚果",
+              "flavor": "原味烘焙",
+              "price": 39.9,
+              "stock": 86,
+              "status": "在售",
+              "tags": [
+                "独立包装",
+                "办公室",
+                "高蛋白"
+              ],
+              "ingredients": [
+                "核桃仁",
+                "巴旦木",
+                "腰果"
+              ],
+              "allergens": [
+                "核桃",
+                "巴旦木",
+                "腰果"
+              ],
+              "mayContain": [
+                "花生",
+                "芝麻"
+              ],
+              "nutrition": {
+                "basis": "每100g",
+                "energyKcal": 590,
+                "proteinG": 18,
+                "fatG": 50,
+                "carbohydrateG": 18,
+                "sugarG": 4.5,
+                "sodiumMg": 10
+              },
+              "shelfLifeDays": 180
+            },
+            {
+              "id": "prod-04",
+              "name": "72% 黑巧克力 100g",
+              "description": "可可风味浓郁的低糖黑巧克力，适合送礼与分享。",
+              "category": "巧克力",
+              "flavor": "浓郁可可",
+              "price": 26.5,
+              "stock": 42,
+              "status": "在售",
+              "tags": [
+                "低糖",
+                "办公室",
+                "礼物"
+              ],
+              "ingredients": [
+                "可可液块",
+                "可可脂",
+                "白砂糖",
+                "乳粉",
+                "大豆磷脂"
+              ],
+              "allergens": [
+                "乳制品",
+                "大豆"
+              ],
+              "mayContain": [
+                "坚果"
+              ],
+              "nutrition": {
+                "basis": "每100g",
+                "energyKcal": 560,
+                "proteinG": 8,
+                "fatG": 42,
+                "carbohydrateG": 32,
+                "sugarG": 18,
+                "sodiumMg": 24
+              },
+              "shelfLifeDays": 365
+            }
+          ],
+          "total": 2
+        },
+        "durationMs": 6,
+        "status": "SUCCESS",
+        "error": null,
+        "startedAt": "2026-10-28T11:34:22.599Z",
+        "finishedAt": "2026-10-28T11:34:22.605Z",
+        "version": "1.0.0"
+      },
+      {
+        "id": "step-3",
+        "index": 2,
+        "type": "tool",
+        "capabilityId": "query_activities",
+        "title": "活动查询",
+        "input": {
+          "activeOnly": true,
+          "limit": 10
+        },
+        "output": {
+          "items": [
+            {
+              "id": "act-01",
+              "name": "秋季囤货节 满 99 减 20",
+              "type": "满减",
+              "status": "进行中",
+              "startAt": "2026-10-01T00:00:00+08:00",
+              "endAt": "2026-10-31T23:59:59+08:00",
+              "threshold": 99,
+              "discount": 20,
+              "offerRule": "店铺商品满 99 元减 20 元，每个订单限享一次。",
+              "applicableProductIds": [],
+              "stackableWithCoupon": true,
+              "description": "全店满减活动，可与新客欢迎券叠加，但每笔订单限用一张优惠券。"
+            },
+            {
+              "id": "act-02",
+              "name": "新客首单礼 满 49 减 10",
+              "type": "满减",
+              "status": "进行中",
+              "startAt": "2026-09-01T00:00:00+08:00",
+              "endAt": "2026-12-31T23:59:59+08:00",
+              "threshold": 49,
+              "discount": 10,
+              "offerRule": "新客首单满 49 元减 10 元，每个账号限用一次。",
+              "applicableProductIds": [],
+              "stackableWithCoupon": false,
+              "description": "首次下单用户专享，需通过新客资格校验。"
+            }
+          ],
+          "total": 2
+        },
+        "durationMs": 4,
+        "status": "SUCCESS",
+        "error": null,
+        "startedAt": "2026-10-28T11:34:22.646Z",
+        "finishedAt": "2026-10-28T11:34:22.650Z",
+        "version": "1.0.0"
+      },
+      {
+        "id": "step-4",
+        "index": 3,
+        "type": "tool",
+        "capabilityId": "query_coupons",
+        "title": "优惠券查询",
+        "input": {
+          "subtotal": 100,
+          "onlyApplicable": false
+        },
+        "output": {
+          "items": [
+            {
+              "id": "coupon-01",
+              "name": "囤货节满减券",
+              "code": "SNACK20",
+              "type": "满减",
+              "threshold": 99,
+              "discount": 20,
+              "status": "启用",
+              "validUntil": "2026-10-31T23:59:59+08:00",
+              "newCustomerOnly": false,
+              "applicableProductIds": [],
+              "stackableWithActivity": true,
+              "description": "全店满 99 元减 20 元，可与可叠加活动共用。",
+              "applicable": true,
+              "reason": "当前可用"
+            },
+            {
+              "id": "coupon-02",
+              "name": "新客欢迎券",
+              "code": "HELLO10",
+              "type": "满减",
+              "threshold": 49,
+              "discount": 10,
+              "status": "启用",
+              "validUntil": "2026-12-31T23:59:59+08:00",
+              "newCustomerOnly": true,
+              "applicableProductIds": [],
+              "stackableWithActivity": true,
+              "description": "新客专享满 49 元减 10 元，每个账号限用一次。",
+              "applicable": false,
+              "reason": "仅限新客使用"
+            },
+            {
+              "id": "coupon-03",
+              "name": "秋日会员券",
+              "code": "AUTUMN15",
+              "type": "满减",
+              "threshold": 129,
+              "discount": 15,
+              "status": "停用",
+              "validUntil": "2026-09-30T23:59:59+08:00",
+              "newCustomerOnly": false,
+              "applicableProductIds": [],
+              "stackableWithActivity": false,
+              "description": "已过期的会员券，仅保留用于历史订单核对。",
+              "applicable": false,
+              "reason": "优惠券已停用"
+            },
+            {
+              "id": "coupon-04",
+              "name": "会员专享 85 折券",
+              "code": "VIP85",
+              "type": "折扣",
+              "threshold": 199,
+              "discount": 15,
+              "status": "启用",
+              "validUntil": "2026-11-30T23:59:59+08:00",
+              "newCustomerOnly": false,
+              "applicableProductIds": [
+                "prod-01",
+                "prod-04",
+                "prod-06"
+              ],
+              "stackableWithActivity": false,
+              "description": "会员专享指定商品 85 折，优惠金额按折扣计算。",
+              "applicable": false,
+              "reason": "未达到满 199 元使用门槛"
+            }
+          ],
+          "total": 4
+        },
+        "durationMs": 6,
+        "status": "SUCCESS",
+        "error": null,
+        "startedAt": "2026-10-28T11:34:22.693Z",
+        "finishedAt": "2026-10-28T11:34:22.699Z",
+        "version": "1.0.0"
+      },
+      {
+        "id": "step-5",
+        "index": 4,
+        "type": "skill",
+        "capabilityId": "recommendation-decision",
+        "title": "推荐决策",
+        "input": {
+          "userInput": "给同事买点不辣的办公室零食，预算 100 元以内。",
+          "planGoal": "基于真实商品与偏好生成零食推荐",
+          "toolResultIds": [
+            "query_products",
+            "query_activities",
+            "query_coupons"
+          ],
+          "candidateIncluded": false
+        },
+        "output": "{\n  \"status\": \"matched\",\n  \"recommendations\": [\n    {\n      \"productId\": \"prod-01\",\n      \"name\": \"每日混合坚果 25g × 7\",\n      \"price\": 39.9,\n      \"flavor\": \"原味烘焙\",\n      \"tags\": [\n        \"独立包装\",\n        \"办公室\",\n        \"高蛋白\"\n      ],\n      \"matchReasons\": [\n        \"价格在 100 元预算内\",\n        \"适合办公室场景\"\n      ],\n      \"caution\": \"配料与过敏原：核桃、巴旦木、腰果、花生、芝麻\"\n    },\n    {\n      \"productId\": \"prod-04\",\n      \"name\": \"72% 黑巧克力 100g\",\n      \"price\": 26.5,\n      \"flavor\": \"浓郁可可\",\n      \"tags\": [\n        \"低糖\",\n        \"办公室\",\n        \"礼物\"\n      ],\n      \"matchReasons\": [\n        \"价格在 100 元预算内\",\n        \"适合办公室场景\"\n      ],\n      \"caution\": \"配料与过敏原：乳制品、大豆、坚果\"\n    }\n  ],\n  \"excludedCount\": 0,\n  \"safetyNote\": null,\n  \"nextAction\": \"recommendation_reason\"\n}",
+        "durationMs": 1,
+        "status": "SUCCESS",
+        "error": null,
+        "startedAt": "2026-10-28T11:34:22.735Z",
+        "finishedAt": "2026-10-28T11:34:22.736Z",
+        "provider": "classroom-fixture",
+        "model": "classroom-fixture-v1",
+        "version": "1.0.0",
+        "hash": "f4d28a48cd72376ad8eb717179d8cd55da3642a190ba13c3e1b9820b9f81e966"
+      },
+      {
+        "id": "step-6",
+        "index": 5,
+        "type": "skill",
+        "capabilityId": "recommendation-reason",
+        "title": "推荐理由生成",
+        "input": {
+          "userInput": "给同事买点不辣的办公室零食，预算 100 元以内。",
+          "planGoal": "基于真实商品与偏好生成零食推荐",
+          "toolResultIds": [
+            "query_products",
+            "query_activities",
+            "query_coupons"
+          ],
+          "candidateIncluded": false
+        },
+        "output": "{\n  \"reasons\": [\n    {\n      \"productId\": \"prod-01\",\n      \"text\": \"每日混合坚果 25g × 7售价 39.90 元，原味烘焙，独立包装、办公室。\",\n      \"evidence\": [\n        \"price:39.9\",\n        \"flavor:原味烘焙\",\n        \"tag:独立包装\",\n        \"tag:办公室\"\n      ]\n    },\n    {\n      \"productId\": \"prod-04\",\n      \"text\": \"72% 黑巧克力 100g售价 26.50 元，浓郁可可，低糖、办公室。\",\n      \"evidence\": [\n        \"price:26.5\",\n        \"flavor:浓郁可可\",\n        \"tag:低糖\",\n        \"tag:办公室\"\n      ]\n    }\n  ],\n  \"safetyReminder\": \"商品可能含有的过敏原信息：核桃、巴旦木、腰果、花生、芝麻、乳制品、大豆、坚果\"\n}",
+        "durationMs": 1,
+        "status": "SUCCESS",
+        "error": null,
+        "startedAt": "2026-10-28T11:34:22.772Z",
+        "finishedAt": "2026-10-28T11:34:22.773Z",
+        "provider": "classroom-fixture",
+        "model": "classroom-fixture-v1",
+        "version": "1.0.0",
+        "hash": "4562006ab1fa41912ee9e41cf2dfd0016110818a7a7e9058d8e5e0a6dd9087ed"
+      },
+      {
+        "id": "step-7",
+        "index": 6,
+        "type": "skill",
+        "capabilityId": "response-generator",
+        "title": "回复生成",
+        "input": {
+          "userInput": "给同事买点不辣的办公室零食，预算 100 元以内。",
+          "planGoal": "基于真实商品与偏好生成零食推荐",
+          "toolResultIds": [
+            "query_products",
+            "query_activities",
+            "query_coupons"
+          ],
+          "candidateIncluded": false
+        },
+        "output": "{\n  \"reply\": \"可以看看这几款：每日混合坚果 25g × 7，39.90 元，原味烘焙，标签：独立包装、办公室；72% 黑巧克力 100g，26.50 元，浓郁可可，标签：低糖、办公室。需要注意，相关商品含有的过敏原或可能含有信息包括：核桃、巴旦木、腰果、花生、芝麻、乳制品、大豆、坚果。如果涉及儿童、孕妇或明确过敏，建议先转人工确认配料和批次。以上价格来自当前商品数据，实际优惠以结算页为准。\",\n  \"citations\": [\n    \"query_products:SUCCESS\",\n    \"query_activities:SUCCESS\",\n    \"query_coupons:SUCCESS\"\n  ],\n  \"nextAction\": \"none\",\n  \"handoffReason\": null\n}",
+        "durationMs": 1,
+        "status": "SUCCESS",
+        "error": null,
+        "startedAt": "2026-10-28T11:34:22.808Z",
+        "finishedAt": "2026-10-28T11:34:22.809Z",
+        "provider": "classroom-fixture",
+        "model": "classroom-fixture-v1",
+        "version": "1.0.3",
+        "hash": "5909a5645bbadf83331c7dba8cc9ab0307266df19fad97d9ccf64cea2e735d4e"
+      },
+      {
+        "id": "step-8",
+        "index": 7,
+        "type": "skill",
+        "capabilityId": "risk-check",
+        "title": "回复风险审核",
+        "input": {
+          "candidateReply": "可以看看这几款：每日混合坚果 25g × 7，39.90 元，原味烘焙，标签：独立包装、办公室；72% 黑巧克力 100g，26.50 元，浓郁可可，标签：低糖、办公室。需要注意，相关商品含有的过敏原或可能含有信息包括：核桃、巴旦木、腰果、花生、芝麻、乳制品、大豆、坚果。如果涉及儿童、孕妇或明确过敏，建议先转人工确认配料和批次。以上价格来自当前商品数据，实际优惠以结算页为准。",
+          "toolIds": [
+            "query_products",
+            "query_activities",
+            "query_coupons"
+          ],
+          "flags": [
+            "recommendation"
+          ]
+        },
+        "output": {
+          "decision": "allow",
+          "riskLevel": "low",
+          "flags": [
+            "recommendation"
+          ],
+          "violations": [],
+          "safeReply": null,
+          "handoffRequired": false,
+          "checkedBy": "risk-check.rules.v1",
+          "notes": [
+            "候选回复未命中阻断规则，可以发送。"
+          ]
+        },
+        "durationMs": 1,
+        "status": "SUCCESS",
+        "error": null,
+        "startedAt": "2026-10-28T11:34:22.844Z",
+        "finishedAt": "2026-10-28T11:34:22.844Z",
+        "provider": "rules-engine",
+        "model": "risk-check.rules.v1",
+        "version": "1.0.0",
+        "hash": "2f16f2d29ac831b7bf5295936ef9848b8a68aa19c57b18539f68965bd2706d0e"
+      }
+    ],
+    "riskResult": {
+      "decision": "allow",
+      "riskLevel": "low",
+      "flags": [
+        "recommendation"
+      ],
+      "violations": [],
+      "safeReply": null,
+      "handoffRequired": false,
+      "checkedBy": "risk-check.rules.v1",
+      "notes": [
+        "候选回复未命中阻断规则，可以发送。"
+      ]
+    },
+    "durationMs": 386,
+    "error": null,
+    "errorCode": null,
+    "provider": "classroom-fixture",
+    "model": "classroom-fixture-v1",
+    "isDemo": true,
+    "skillVersions": [
+      {
+        "skillId": "need-extraction",
+        "version": "1.0.0",
+        "hash": "0f888bf5fdbcb910133fe586f4c6bbc41508c78eca339eccbdf658f5395bd8b4"
+      },
+      {
+        "skillId": "recommendation-decision",
+        "version": "1.0.0",
+        "hash": "f4d28a48cd72376ad8eb717179d8cd55da3642a190ba13c3e1b9820b9f81e966"
+      },
+      {
+        "skillId": "recommendation-reason",
+        "version": "1.0.0",
+        "hash": "4562006ab1fa41912ee9e41cf2dfd0016110818a7a7e9058d8e5e0a6dd9087ed"
+      },
+      {
+        "skillId": "response-generator",
+        "version": "1.0.3",
+        "hash": "5909a5645bbadf83331c7dba8cc9ab0307266df19fad97d9ccf64cea2e735d4e"
+      },
+      {
+        "skillId": "risk-check",
+        "version": "1.0.0",
+        "hash": "2f16f2d29ac831b7bf5295936ef9848b8a68aa19c57b18539f68965bd2706d0e"
+      }
+    ],
+    "toolVersions": [
+      {
+        "toolId": "query_products",
+        "version": "1.0.0"
+      },
+      {
+        "toolId": "query_activities",
+        "version": "1.0.0"
+      },
+      {
+        "toolId": "query_coupons",
+        "version": "1.0.0"
+      }
+    ],
+    "evaluation": {
+      "score": 100,
+      "status": "PASS",
+      "checks": [
+        {
+          "id": "plan_valid",
+          "label": "计划与能力校验",
+          "status": "PASS",
+          "detail": "Planner 计划通过独立 Validator 校验。"
+        },
+        {
+          "id": "mandatory_capabilities",
+          "label": "强制能力执行",
+          "status": "PASS",
+          "detail": "全部 mandatoryCapabilities 已成功执行。"
+        },
+        {
+          "id": "steps_successful",
+          "label": "Skill / Tool 步骤",
+          "status": "PASS",
+          "detail": "8 个步骤全部成功。"
+        },
+        {
+          "id": "tool_evidence",
+          "label": "工具证据",
+          "status": "PASS",
+          "detail": "已成功执行 3 个 Tool，覆盖 1 个强制工具。"
+        },
+        {
+          "id": "risk_checked",
+          "label": "风险审核",
+          "status": "PASS",
+          "detail": "风险审核放行，风险等级 low。"
+        },
+        {
+          "id": "final_reply",
+          "label": "最终回复",
+          "status": "PASS",
+          "detail": "最终回复长度 189 字符。"
+        },
+        {
+          "id": "run_status",
+          "label": "运行状态",
+          "status": "PASS",
+          "detail": "运行结束状态：成功。"
+        }
+      ],
+      "summary": "计划、执行、风险审核和最终回复全部通过。"
+    },
+    "handoff": null,
+    "retryOf": null,
+    "conversationEnded": false
+  },
+  {
     "id": "run-1793156045729-f00c1f43",
     "question": "咸香，无过敏史，但对牛奶过敏",
     "source": "demo",

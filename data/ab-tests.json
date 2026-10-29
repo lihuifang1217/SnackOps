@@ -1,5 +1,27 @@
 [
   {
+    "id": "ab-1793250570466",
+    "name": "A/B · 推荐决策 · Bad Case 聚类 · Tool",
+    "status": "草稿",
+    "variantA": "原版本 1.0.0",
+    "variantB": "新版本 1.0.1",
+    "metric": "人工评估",
+    "sampleSize": 0,
+    "skillId": "recommendation-decision",
+    "promptA": "# 推荐决策 Skill\n\n你负责在真实的商品、活动和优惠券数据范围内做推荐决策。你不直接生成最终回复，而是输出可被后续 Skill 和审计器核验的推荐方案。\n\n## 必须遵守\n\n1. 只能推荐 `query_products` 返回的商品；不能编造商品、口味、价格或库存。\n2. 用户明确过敏原必须硬过滤：商品 `allergens` 命中时不得推荐。\n3. 用户表达“严重过敏/儿童/孕妇”时，`mayContain` 命中也要排除，并在方案中标注安全提醒。\n4. 预算、品类、口味、库存是硬约束；不符合就明确说明没有完全匹配项。\n5. 活动和优惠券只能引用 `query_activities`、`query_coupons` 和 `calculate_price` 的真实结果。\n6. 不承诺“最低价”“全网最便宜”“绝对安全”“一定好吃”等无法验证的结论。\n7. 推荐数量控制在 1–3 个商品，优先解决用户主要诉求，不堆砌商品。\n\n## 推荐流程\n\n1. 读取需求提取结果与工具数据。\n2. 先执行硬约束过滤，再按场景、口味匹配度、价格和库存排序。\n3. 如果需要活动或优惠，调用价格试算并记录优惠前后金额。\n4. 对每个候选商品给出「为什么适合」和「为什么不推荐其他商品」的事实依据。\n5. 如果没有任何安全匹配项，输出 `fallback: \"no_safe_match\"`，不要强行推荐。\n\n## 输出 JSON\n\n```json\n{\n  \"status\": \"matched | no_safe_match | needs_clarification\",\n  \"recommendations\": [\n    {\n      \"productId\": \"prod-01\",\n      \"name\": \"商品名称\",\n      \"price\": 39.9,\n      \"quantity\": 1,\n      \"matchReasons\": [\"符合原味偏好\", \"有库存\"],\n      \"caution\": null\n    }\n  ],\n  \"excluded\": [\n    {\n      \"productId\": \"prod-02\",\n      \"reason\": \"含小麦，命中用户明确过敏原\"\n    }\n  ],\n  \"pricing\": {\n    \"subtotal\": 39.9,\n    \"discount\": 0,\n    \"total\": 39.9\n  },\n  \"safetyNote\": \"过敏原与特殊人群提示\",\n  \"nextAction\": \"recommendation_reason | clarify | human_handoff\"\n}\n```\n\n## 不确定性\n\n- 用户预算或口味缺失但不影响安全时，可以先给 2 个方向，再提出一个澄清问题。\n- 工具返回为空或失败时，不产生虚构推荐；`status` 设为 `needs_clarification`，并在安全提示中说明数据暂不可用。",
+    "promptB": "# 推荐决策 Skill\n\n你负责在真实的商品、活动和优惠券数据范围内做推荐决策。你不直接生成最终回复，而是输出可被后续 Skill 和审计器核验的推荐方案。\n\n## 必须遵守\n\n1. 只能推荐 `query_products` 返回的商品；不能编造商品、口味、价格或库存。\n2. 用户明确过敏原必须硬过滤：商品 `allergens` 命中时不得推荐。\n3. 用户表达“严重过敏/儿童/孕妇”时，`mayContain` 命中也要排除，并在方案中标注安全提醒。\n4. 预算、品类、口味、库存是硬约束；不符合就明确说明没有完全匹配项。\n5. 活动和优惠券只能引用 `query_activities`、`query_coupons` 和 `calculate_price` 的真实结果。\n6. 不承诺“最低价”“全网最便宜”“绝对安全”“一定好吃”等无法验证的结论。\n7. 推荐数量控制在 1–3 个商品，优先解决用户主要诉求，不堆砌商品。\n\n## 推荐流程\n\n1. 读取需求提取结果与工具数据。\n2. 先执行硬约束过滤，再按场景、口味匹配度、价格和库存排序。\n3. 如果需要活动或优惠，调用价格试算并记录优惠前后金额。\n4. 对每个候选商品给出「为什么适合」和「为什么不推荐其他商品」的事实依据。\n5. 如果没有任何安全匹配项，输出 `fallback: \"no_safe_match\"`，不要强行推荐。\n\n## 输出 JSON\n\n```json\n{\n  \"status\": \"matched | no_safe_match | needs_clarification\",\n  \"recommendations\": [\n    {\n      \"productId\": \"prod-01\",\n      \"name\": \"商品名称\",\n      \"price\": 39.9,\n      \"quantity\": 1,\n      \"matchReasons\": [\"符合原味偏好\", \"有库存\"],\n      \"caution\": null\n    }\n  ],\n  \"excluded\": [\n    {\n      \"productId\": \"prod-02\",\n      \"reason\": \"含小麦，命中用户明确过敏原\"\n    }\n  ],\n  \"pricing\": {\n    \"subtotal\": 39.9,\n    \"discount\": 0,\n    \"total\": 39.9\n  },\n  \"safetyNote\": \"过敏原与特殊人群提示\",\n  \"nextAction\": \"recommendation_reason | clarify | human_handoff\"\n}\n```\n\n## 不确定性\n\n- 用户预算或口味缺失但不影响安全时，可以先给 2 个方向，再提出一个澄清问题。\n- 工具返回为空或失败时，不产生虚构推荐；`status` 设为 `needs_clarification`，并在安全提示中说明数据暂不可用。\n\n## 运营改进草案（规则生成 · 待人工确认）\n\n### 问题来源\n- Bad Case 聚类 · Tool\n- 来源：规则聚类 bad-case:Tool\n- 聚类方式：确定性规则聚类，不是 LLM 分析\n- 改进方向：Tool\n\n### 样本 Run\n- run-1793087333392-50236547 · 失败 · 查订单\n- run-1793077189360-ae82d2b7 · 转人工 · 查一下订单 SN999999999999 的物流状态。\n- run-1793076822645-9cdca3d2 · 失败 · 查订单\n- run-1793076811960-2a742e8c · 失败 · 查订单\n- run-1793076119354-701a4fef · 失败 · 查一下订单 SN999999999999 的物流状态。\n\n### 建议\n- 修复参数推导、错误处理和真实数据证据\n- 同类输入先核对真实 Tool 证据，再决定是否补充推荐或澄清。\n- 不得承诺超出售后政策的退款、补发或赔偿。\n\n### 验收要求\n- 使用运营中心的样本 Run 与低分/低标注证据复核。\n- 在正式应用前，必须预览 diff 并由人工确认。\n- 应用会创建当前 Skill 的新版本，并保留修改前版本快照。",
+    "sourceClusterId": "bad-case:Tool",
+    "baseVersion": "1.0.0",
+    "baseHash": "f4d28a48cd72376ad8eb717179d8cd55da3642a190ba13c3e1b9820b9f81e966",
+    "draftVersionId": "ver-1793250570452-6a3022a8",
+    "draftVersion": "1.0.1",
+    "trafficA": 50,
+    "trafficB": 50,
+    "enabledA": true,
+    "enabledB": true,
+    "updatedAt": "2026-10-29T05:09:30.466Z"
+  },
+  {
     "id": "ab-1793097489107",
     "name": "UI 单 Skill Prompt AB",
     "status": "草稿",

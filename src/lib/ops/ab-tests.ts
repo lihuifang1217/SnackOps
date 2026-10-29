@@ -3,8 +3,8 @@ import 'server-only';
 import { z } from 'zod';
 import { AppError } from '@/lib/errors';
 import { readCollection, updateCollection } from '@/lib/store';
-import type { AbTest } from '@/lib/schemas';
-import { getSkillDetail } from '@/lib/registry/skills';
+import type { AbTest, Improvement } from '@/lib/schemas';
+import { applyDraftSkillVersion, getSkillDetail, saveSkillVersion } from '@/lib/registry/skills';
 
 const skillId = z.string().trim().min(1).max(80).optional();
 const traffic = z.number().int().min(0).max(100).optional();
@@ -26,6 +26,12 @@ export const abTestCreateSchema = z
     trafficB: traffic,
     enabledA: z.boolean().optional(),
     enabledB: z.boolean().optional(),
+    sourceImprovementId: z.string().optional(),
+    sourceClusterId: z.string().optional(),
+    baseVersion: z.string().optional(),
+    baseHash: z.string().optional(),
+    draftVersionId: z.string().optional(),
+    draftVersion: z.string().optional(),
   })
   .strict();
 
@@ -38,7 +44,7 @@ export const abTestUpdateSchema = z
     promptB: text,
     metric: z.string().trim().min(1).max(120).optional(),
     sampleSize: z.number().int().min(0).max(1_000_000).optional(),
-    status: z.enum(['草稿', '运行中', '已结束']).optional(),
+    status: z.enum(['草稿', '运行中', '已结束', '确认应用']).optional(),
     skillId: skillId,
     skillAId: skillId,
     skillBId: skillId,
@@ -98,6 +104,12 @@ export async function createAbTest(raw: unknown): Promise<AbTest> {
     trafficB: input.trafficB ?? 50,
     enabledA: input.enabledA ?? true,
     enabledB: input.enabledB ?? true,
+    ...(input.sourceImprovementId ? { sourceImprovementId: input.sourceImprovementId } : {}),
+    ...(input.sourceClusterId ? { sourceClusterId: input.sourceClusterId } : {}),
+    ...(input.baseVersion ? { baseVersion: input.baseVersion } : {}),
+    ...(input.baseHash ? { baseHash: input.baseHash } : {}),
+    ...(input.draftVersionId ? { draftVersionId: input.draftVersionId } : {}),
+    ...(input.draftVersion ? { draftVersion: input.draftVersion } : {}),
     updatedAt: new Date().toISOString(),
   };
   await updateCollection('ab-tests', (current) => [abTest, ...current]);
@@ -122,4 +134,83 @@ export async function updateAbTest(id: string, raw: unknown): Promise<AbTest> {
   });
   if (!updated) throw new AppError(404, 'AB_TEST_NOT_FOUND', 'A/B 实验不存在');
   return updated;
+}
+
+
+export async function confirmAbTest(id: string): Promise<{
+  abTest: AbTest;
+  skill: Awaited<ReturnType<typeof getSkillDetail>>;
+  improvement: Improvement | null;
+}> {
+  const tests = await readCollection('ab-tests');
+  const existing = tests.find((item) => item.id === id);
+  if (!existing) throw new AppError(404, 'AB_TEST_NOT_FOUND', 'A/B 实验不存在');
+  const skillId = existing.skillId ?? existing.skillAId ?? existing.skillBId;
+  if (!skillId) throw new AppError(400, 'AB_SKILL_MISSING', 'A/B 实验未绑定 Skill');
+
+  if (existing.status === '确认应用') {
+    const skill = await getSkillDetail(skillId);
+    const improvements = await readCollection('improvements');
+    return {
+      abTest: existing,
+      skill,
+      improvement:
+        improvements.find((item) => item.id === existing.sourceImprovementId) ?? null,
+    };
+  }
+  if (existing.status !== '草稿') {
+    throw new AppError(409, 'AB_NOT_DRAFT', '只有草稿状态的 A/B 实验可以确认应用');
+  }
+
+  const promptB = existing.promptB ?? existing.variantB;
+  const skill = existing.draftVersionId
+    ? await applyDraftSkillVersion(skillId, existing.draftVersionId, {
+        expectedHash: existing.baseHash,
+        changeNote: `A/B 确认应用：${existing.name}`,
+      })
+    : await (async () => {
+        const current = await getSkillDetail(skillId);
+        return saveSkillVersion(skillId, {
+          name: current.name,
+          description: current.description,
+          model: current.model,
+          temperature: current.temperature,
+          maxTokens: current.maxTokens,
+          requiredTools: current.requiredTools,
+          systemPrompt: promptB,
+          changeNote: `A/B 确认应用：${existing.name}`,
+          expectedHash: current.hash,
+        });
+      })();
+
+  const confirmedAt = new Date().toISOString();
+  const updated: AbTest = {
+    ...existing,
+    status: '确认应用',
+    appliedVersion: skill.version,
+    confirmedAt,
+    updatedAt: confirmedAt,
+  };
+  await updateCollection('ab-tests', (current) =>
+    current.map((item) => (item.id === id ? updated : item)),
+  );
+
+  let improvement: Improvement | null = null;
+  if (existing.sourceImprovementId) {
+    await updateCollection('improvements', (current) =>
+      current.map((item) => {
+        if (item.id !== existing.sourceImprovementId) return item;
+        improvement = {
+          ...item,
+          status: '已完成',
+          targetSkillId: skill.id,
+          promptDraft: promptB,
+          updatedAt: confirmedAt,
+        };
+        return improvement;
+      }),
+    );
+  }
+
+  return { abTest: updated, skill, improvement };
 }

@@ -40,7 +40,7 @@ import type {
   ImprovementCluster,
   ImprovementDirection,
   OpsOverview,
-  PromptApplyResponse,
+  PromptVersionCreateResponse,
   PromptDraftResponse,
   Rating,
   RatingsResponse,
@@ -469,7 +469,8 @@ function ClusterCard({ cluster, onDraft, busy }: { cluster: ImprovementCluster; 
           </div>
         ))}
       </div>
-      <div className="mt-2 flex justify-end">
+      <div className="mt-2 flex flex-wrap items-end justify-end gap-2">
+        <p className="mr-auto max-w-[560px] text-[10px] leading-4 text-muted-foreground">点击“生成 Prompt 草案”只创建版本，不立即应用；会自动进入 Prompt A/B 并生成一条实验草稿（A=原版本，B=新版本），确认后才正式应用。</p>
         <Button type="button" size="sm" variant="outline" onClick={onDraft} disabled={busy}>{busy ? <LoaderCircle className="animate-spin" aria-hidden /> : <Sparkles aria-hidden />}{busy ? '生成中…' : '生成 Prompt 草案'}</Button>
       </div>
     </div>
@@ -490,12 +491,10 @@ export function OpsCenter() {
   const [refreshing, setRefreshing] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [draftLoading, setDraftLoading] = useState<string | null>(null);
-  const [draftApplying, setDraftApplying] = useState(false);
-  const [draftOpen, setDraftOpen] = useState(false);
-  const [draft, setDraft] = useState<PromptDraftResponse | null>(null);
-  const [draftSource, setDraftSource] = useState<DraftSource | null>(null);
-  const [draftSkillId, setDraftSkillId] = useState('');
-  const [changeNote, setChangeNote] = useState('根据运营规则聚类改进 Skill');
+  const [draftConfirm, setDraftConfirm] = useState<{ source: DraftSource; skillId?: string } | null>(null);
+  const [draftPreview, setDraftPreview] = useState<PromptDraftResponse | null>(null);
+  const [draftPreviewLoading, setDraftPreviewLoading] = useState(false);
+  const [draftPreviewError, setDraftPreviewError] = useState<string | null>(null);
   const [rollbackSkillId, setRollbackSkillId] = useState('');
   const [rollbackVersions, setRollbackVersions] = useState<SkillVersionSummary[]>([]);
   const [rollbackVersionId, setRollbackVersionId] = useState('');
@@ -527,6 +526,7 @@ export function OpsCenter() {
     enabledB: true,
   });
   const [editingAb, setEditingAb] = useState<AbTest | null>(null);
+  const [abConfirming, setAbConfirming] = useState<string | null>(null);
   const [abEditSaving, setAbEditSaving] = useState(false);
   const [abSkillLoading, setAbSkillLoading] = useState(false);
 
@@ -712,35 +712,42 @@ export function OpsCenter() {
     } catch (caught) { toast.error('标注转存失败', { description: errorText(caught) }); }
   }
 
+  async function requestDraft(source: DraftSource, skillId?: string) {
+    setDraftConfirm({ source, ...(skillId ? { skillId } : {}) });
+    setDraftPreview(null);
+    setDraftPreviewError(null);
+    setDraftPreviewLoading(true);
+    try {
+      const result = await postJson<PromptDraftResponse>('/api/improvements/preview-prompt', {
+        ...source,
+        ...(skillId ? { skillId } : {}),
+      });
+      if (result) setDraftPreview(result);
+    } catch (caught) {
+      setDraftPreviewError(errorText(caught));
+    } finally {
+      setDraftPreviewLoading(false);
+    }
+  }
+
   async function generateDraft(source: DraftSource, skillId?: string) {
     const key = source.clusterId ?? source.improvementId ?? 'draft';
     setDraftLoading(key);
     try {
-      const data = await postJson<PromptDraftResponse>('/api/improvements/generate-prompt', { ...source, ...(skillId ? { skillId } : {}) });
-      setDraft(data); setDraftSource(source); setDraftSkillId(data.skill.id); setDraftOpen(true);
-      setChangeNote(`应用规则改进：${data.cluster?.title ?? data.improvement?.title ?? 'Skill Prompt'}`);
-      await refreshImprovements();
-    } catch (caught) { toast.error('Prompt 草案生成失败', { description: errorText(caught) }); }
-    finally { setDraftLoading(null); }
-  }
-
-  async function regenerateDraft() {
-    if (!draftSource || !draftSkillId) return;
-    await generateDraft(draftSource, draftSkillId);
-  }
-
-  async function applyDraft() {
-    if (!draft || !draftSource || draftApplying) return;
-    setDraftApplying(true);
-    try {
-      const result = await postJson<PromptApplyResponse>('/api/improvements/apply-prompt', {
-        ...draftSource, skillId: draft.skill.id, draftPrompt: draft.draftPrompt, changeNote, expectedHash: draft.currentHash,
+      const data = await postJson<PromptVersionCreateResponse>('/api/improvements/create-version', {
+        ...source,
+        ...(skillId ? { skillId } : {}),
+        changeNote: `规则改进：${source.clusterId ?? source.improvementId ?? 'Skill Prompt'}`,
       });
-      toast.success(`Prompt 已应用，新版本 ${result.skill.version}`, { description: '应用前已保存当前 Skill 版本快照；生产 Prompt 已更新。' });
-      setDraftOpen(false); setDraft(null);
-      await Promise.all([refreshImprovements(), refreshSkills(), refreshOverview()]);
-    } catch (caught) { toast.error('Prompt 应用失败', { description: errorText(caught) }); }
-    finally { setDraftApplying(false); }
+      setDraftConfirm(null);
+      setDraftPreview(null);
+      toast.success('已创建版本与 A/B 草稿', {
+        description: `${data.draft.skill.name} · A v${data.abTest.baseVersion ?? data.draft.skill.version} / B v${data.version.version}；尚未应用，确认后生效。`,
+      });
+      await Promise.all([refreshImprovements(), refreshAbTests(), refreshSkills(), refreshOverview()]);
+      setTab('ab-tests');
+    } catch (caught) { toast.error('创建版本或 A/B 草稿失败', { description: errorText(caught) }); }
+    finally { setDraftLoading(null); }
   }
 
 
@@ -816,6 +823,25 @@ export function OpsCenter() {
       toast.error('实验保存失败', { description: errorText(caught) });
     } finally {
       setAbEditSaving(false);
+    }
+  }
+
+  async function confirmAbDraft(id: string) {
+    if (abConfirming) return;
+    setAbConfirming(id);
+    try {
+      const result = await postJson<{ abTest: AbTest; skill: { name: string; version: string }; improvement: unknown }>(
+        `/api/ab-tests/${encodeURIComponent(id)}/confirm`,
+        {},
+      );
+      toast.success('A/B 草稿已确认并正式应用', {
+        description: `${result.skill.name} 当前版本 v${result.skill.version}；实验状态：${result.abTest.status}`,
+      });
+      await Promise.all([refreshAbTests(), refreshSkills(), refreshImprovements(), refreshOverview()]);
+    } catch (caught) {
+      toast.error('A/B 确认应用失败', { description: errorText(caught) });
+    } finally {
+      setAbConfirming(null);
     }
   }
 
@@ -1059,7 +1085,7 @@ export function OpsCenter() {
         {errors.improvements ? <SectionError message={`改进建议加载失败：${errors.improvements}`} /> : null}
         <div className="rounded-lg border border-amber-200 bg-amber-50 px-3.5 py-3 text-[11px] leading-5 text-amber-900">
           <div className="flex flex-wrap items-center gap-2 font-semibold"><ShieldAlert className="size-3.5" aria-hidden />规则聚类，不是 LLM 分析</div>
-          <p className="mt-1">只按低评分、低分标注、失败 Run、问题类型和失败步骤做确定性分组。Prompt 草案由规则模板生成，生成不会修改生产 Prompt。</p>
+          <p className="mt-1">只按低评分、低分标注、失败 Run、问题类型和失败步骤做确定性分组。点击生成后只创建待确认版本和 A/B 草稿，不会修改生产 Prompt；在 Prompt A/B 中确认后才正式应用。</p>
         </div>
         <Card>
           <CardHeader className="flex-row flex-wrap items-start justify-between gap-2">
@@ -1067,23 +1093,65 @@ export function OpsCenter() {
             <Button type="button" size="sm" variant="outline" onClick={() => void refreshImprovements()}><RefreshCw aria-hidden /> 重新聚类</Button>
           </CardHeader>
           <CardContent className="space-y-2">
-            {(improvements?.clusters ?? []).length === 0 ? <EmptyState title="暂无规则聚类" description="低评分、低分标注或失败 Run 出现后，规则聚类会自动生成。" /> : (improvements?.clusters ?? []).map((cluster) => <ClusterCard key={cluster.id} cluster={cluster} busy={draftLoading === cluster.id} onDraft={() => void generateDraft({ clusterId: cluster.id })} />)}
+            {(improvements?.clusters ?? []).length === 0 ? <EmptyState title="暂无规则聚类" description="低评分、低分标注或失败 Run 出现后，规则聚类会自动生成。" /> : (improvements?.clusters ?? []).map((cluster) => <ClusterCard key={cluster.id} cluster={cluster} busy={draftLoading === cluster.id} onDraft={() => void requestDraft({ clusterId: cluster.id })} />)}
           </CardContent>
         </Card>
-        <Dialog open={draftOpen} onOpenChange={(open) => { setDraftOpen(open); if (!open) setDraft(null); }} title="Prompt 改进草案" description="规则生成草案，未自动应用；应用前请核对 diff 和样本证据。" className="max-w-3xl">
-          {draft ? (
-            <div className="space-y-3">
-              <div className="rounded-md border border-amber-200 bg-amber-50 px-2.5 py-2 text-[10px] leading-5 text-amber-900">{draft.notice}<span className="ml-1">目标 Skill：{draft.skill.name} · 当前 {draft.skill.version}</span></div>
-              <div className="flex flex-wrap items-end gap-2">
-                <label className="min-w-[220px] flex-1 text-[10px] text-muted-foreground">目标 Skill<select className="field-select mt-1" value={draftSkillId} onChange={(event) => setDraftSkillId(event.target.value)}>{skills.map((skill) => <option key={skill.id} value={skill.id}>{skill.name} · {skill.id}</option>)}</select></label>
-                <Button type="button" size="sm" variant="outline" onClick={() => void regenerateDraft()}>按此 Skill 重新生成</Button>
-              </div>
-              <div className="flex flex-wrap items-center gap-2 text-[10px] text-muted-foreground"><Badge tone="success">+{draft.stats.added}</Badge><Badge tone="danger">-{draft.stats.removed}</Badge><span>{draft.stats.unchanged} 行未变</span><span className="ml-auto">应用后版本：{draft.skill.version} → 新版本</span></div>
-              <div className="diff-block">{draft.diff.map((line, index) => <div key={`${index}-${line.type}`} className={`diff-line diff-${line.type}`}><span className="diff-line-no">{line.oldLine ?? ''}</span><span className="diff-line-no">{line.newLine ?? ''}</span><span className="diff-marker">{line.type === 'added' ? '+' : line.type === 'removed' ? '-' : ' '}</span><span className="diff-text">{line.text}</span></div>)}</div>
-              <div><p className="agent-label">变更说明</p><Input value={changeNote} onChange={(event) => setChangeNote(event.target.value)} maxLength={500} /></div>
-              <div className="flex flex-wrap items-center justify-end gap-2 border-t pt-3"><p className="mr-auto text-[10px] text-muted-foreground">应用前会自动保存当前 Skill 版本快照。{draftSkillId !== draft.skill.id ? ' 切换目标 Skill 后请先重新生成草案。' : ''}</p><Button type="button" variant="outline" onClick={() => setDraftOpen(false)}>取消</Button><Button type="button" onClick={() => void applyDraft()} disabled={draftApplying || !changeNote.trim() || draftSkillId !== draft.skill.id}>{draftApplying ? <LoaderCircle className="animate-spin" aria-hidden /> : <GitBranch aria-hidden />}{draftApplying ? '应用中…' : '确认应用并创建版本'}</Button></div>
+
+        <Dialog
+          open={draftConfirm !== null}
+          onOpenChange={(open) => { if (!open) { setDraftConfirm(null); setDraftPreview(null); setDraftPreviewError(null); } }}
+          title="创建版本并生成 Prompt A/B 草稿？"
+          description="此操作只创建待确认版本和 A/B 草稿，不会修改当前生产 Prompt。"
+          className="max-w-2xl"
+        >
+          <div className="space-y-3">
+            <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2.5 text-[11px] leading-5 text-amber-950">
+              <p className="font-semibold">确认后会执行以下动作：</p>
+              <ul className="mt-1 list-inside list-disc space-y-0.5">
+                <li>根据当前改进建议生成 Prompt 草案；</li>
+                <li>创建一个待确认的新 Skill 版本；</li>
+                <li>自动进入 Prompt A/B；</li>
+                <li>生成一条 A/B 实验草稿：A=原版本，B=新版本。</li>
+              </ul>
+              <p className="mt-1">当前 Skill 不会立即变化；只有你在 Prompt A/B 点击“确认应用”后才正式生效。</p>
             </div>
-          ) : null}
+            <div className="rounded-md bg-muted/40 px-3 py-2 text-[10px] text-muted-foreground">
+              来源：{draftConfirm?.source.clusterId ? `规则聚类 ${draftConfirm.source.clusterId}` : `改进建议 ${draftConfirm?.source.improvementId ?? ''}`}
+            </div>
+
+            {draftPreviewLoading ? <div className="flex items-center gap-2 rounded-md border px-3 py-2 text-[10px] text-muted-foreground"><LoaderCircle className="size-3.5 animate-spin" aria-hidden />正在生成并计算 Prompt diff…</div> : null}
+            {draftPreviewError ? <div role="alert" className="alert alert-danger"><AlertTriangle className="size-4 shrink-0" aria-hidden /><span>{draftPreviewError}</span></div> : null}
+            {draftPreview ? (
+              <div className="space-y-2">
+                <div className="flex flex-wrap items-center gap-2 text-[10px] text-muted-foreground">
+                  <Badge tone="neutral">目标 Skill：{draftPreview.skill.name}</Badge>
+                  <Badge tone="neutral">当前 v{draftPreview.skill.version}</Badge>
+                  <Badge tone="success">+{draftPreview.stats.added} 行</Badge>
+                  <Badge tone="danger">−{draftPreview.stats.removed} 行</Badge>
+                  <span>{draftPreview.stats.unchanged} 行未变</span>
+                </div>
+                <div className="diff-block max-h-[320px] overflow-auto" aria-label="Prompt 修改 diff">
+                  {draftPreview.diff.map((line, index) => (
+                    <div key={`${index}-${line.type}`} className={`diff-line diff-${line.type}`}>
+                      <span className="diff-line-no">{line.oldLine ?? ''}</span>
+                      <span className="diff-line-no">{line.newLine ?? ''}</span>
+                      <span className="diff-marker">{line.type === 'added' ? '+' : line.type === 'removed' ? '-' : ' '}</span>
+                      <span className="diff-text">{line.text}</span>
+                    </div>
+                  ))}
+                </div>
+                <p className="text-[10px] leading-4 text-muted-foreground">diff 仅用于确认，点击取消不会写入版本或 A/B 草稿。</p>
+              </div>
+            ) : null}
+
+            <div className="flex justify-end gap-2">
+              <Button type="button" variant="outline" onClick={() => { setDraftConfirm(null); setDraftPreview(null); setDraftPreviewError(null); }}>取消</Button>
+              <Button type="button" onClick={() => { if (draftConfirm) void generateDraft(draftConfirm.source, draftConfirm.skillId); }} disabled={!draftPreview || draftPreviewLoading || (draftConfirm !== null && draftLoading !== null)}>
+                {draftLoading ? <LoaderCircle className="animate-spin" aria-hidden /> : <GitBranch aria-hidden />}
+                {draftLoading ? '创建中…' : '确认创建并进入 Prompt A/B'}
+              </Button>
+            </div>
+          </div>
         </Dialog>
       </div>
     );
@@ -1126,6 +1194,7 @@ export function OpsCenter() {
             ))}
           </CardContent>
         </Card>
+
       </div>
     );
   }
@@ -1139,7 +1208,7 @@ export function OpsCenter() {
             {errors.skills ? <SectionError message={errors.skills} /> : null}
             <div className="grid gap-2 md:grid-cols-2">
               <label className="text-[10px] text-muted-foreground">选择 Skill<select className="field-select mt-1" value={rollbackSkillId} onChange={(event) => void chooseRollbackSkill(event.target.value)}><option value="">选择 Skill</option>{skills.map((skill) => <option key={skill.id} value={skill.id}>{skill.name} · {skill.version}</option>)}</select></label>
-              <label className="text-[10px] text-muted-foreground">选择要恢复的版本<select className="field-select mt-1" value={rollbackVersionId} onChange={(event) => setRollbackVersionId(event.target.value)} disabled={rollbackVersions.length === 0}><option value="">选择版本</option>{rollbackVersions.map((version) => <option key={version.id} value={version.id} disabled={version.status === '当前'}>v{version.version} · {version.status} · {version.changeNote}</option>)}</select></label>
+              <label className="text-[10px] text-muted-foreground">选择要恢复的版本<select className="field-select mt-1" value={rollbackVersionId} onChange={(event) => setRollbackVersionId(event.target.value)} disabled={rollbackVersions.length === 0}><option value="">选择版本</option>{rollbackVersions.map((version) => <option key={version.id} value={version.id} disabled={version.status === '当前' || version.status === '草稿'}>v{version.version} · {version.status} · {version.changeNote}</option>)}</select></label>
             </div>
             <Button type="button" size="sm" variant="outline" onClick={() => void rollbackVersion()} disabled={!rollbackSkillId || !rollbackVersionId || rollbackPending}>{rollbackPending ? <LoaderCircle className="animate-spin" aria-hidden /> : <RotateCcw aria-hidden />}{rollbackPending ? '回滚中…' : '回滚并创建新版本'}</Button>
             {rollbackVersions.length > 0 ? <div className="space-y-1">{rollbackVersions.map((version) => <div key={version.id} className="flex flex-wrap items-center justify-between gap-2 rounded-md border px-2.5 py-1.5 text-[10px]"><span className="font-mono">{version.id}</span><span>v{version.version}</span><Badge tone={version.status === '当前' ? 'success' : 'neutral'}>{version.status}</Badge><span className="text-muted-foreground">{version.changeNote}</span></div>)}</div> : null}
@@ -1189,14 +1258,19 @@ export function OpsCenter() {
               return (
                 <div key={test.id} className="rounded-md border px-3 py-2">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex flex-wrap items-center gap-2"><Badge tone={test.status === '运行中' ? 'success' : test.status === '已结束' ? 'neutral' : 'warning'}>{test.status}</Badge><span className="text-xs font-semibold">{test.name}</span><Badge tone="neutral">{skillName(test.skillId ?? test.skillAId ?? test.skillBId)}</Badge><Badge tone={test.enabledA ? 'success' : 'neutral'}>A {test.enabledA ? '开' : '关'} · {test.trafficA}%</Badge><Badge tone={test.enabledB ? 'success' : 'neutral'}>B {test.enabledB ? '开' : '关'} · {test.trafficB}%</Badge></div>
-                    <Button type="button" size="sm" variant="outline" onClick={() => openAbEdit(test)}>编辑 / 保存实验</Button>
+                    <div className="flex flex-wrap items-center gap-2"><Badge tone={test.status === '确认应用' ? 'success' : test.status === '运行中' ? 'success' : test.status === '已结束' ? 'neutral' : 'warning'}>{test.status}</Badge><span className="text-xs font-semibold">{test.name}</span><Badge tone="neutral">{skillName(test.skillId ?? test.skillAId ?? test.skillBId)}</Badge><Badge tone={test.enabledA ? 'success' : 'neutral'}>A {test.enabledA ? '开' : '关'} · {test.trafficA}%</Badge><Badge tone={test.enabledB ? 'success' : 'neutral'}>B {test.enabledB ? '开' : '关'} · {test.trafficB}%</Badge></div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {test.status === '草稿' ? <Button type="button" size="sm" onClick={() => void confirmAbDraft(test.id)} disabled={abConfirming === test.id}>{abConfirming === test.id ? <LoaderCircle className="animate-spin" aria-hidden /> : <CheckCircle2 aria-hidden />}{abConfirming === test.id ? '应用中…' : '确认应用'}</Button> : null}
+                      <Button type="button" size="sm" variant="outline" onClick={() => openAbEdit(test)}>编辑 / 保存实验</Button>
+                    </div>
                   </div>
                   <div className="mt-1 grid gap-1 text-[10px] leading-5 text-muted-foreground xl:grid-cols-2">
                     <p className="line-clamp-2"><span className="font-semibold text-foreground/80">A：</span>{promptA}</p>
                     <p className="line-clamp-2"><span className="font-semibold text-foreground/80">B：</span>{promptB}</p>
                   </div>
-                  <p className="mt-0.5 text-[10px] text-muted-foreground">{test.metric} · n={test.sampleSize}{test.winner ? ` · Winner：${test.winner}` : ''}</p>
+                  <p className="mt-0.5 text-[10px] text-muted-foreground">{test.metric} · n={test.sampleSize}{test.baseVersion ? ` · A 原版本 v${test.baseVersion}` : ''}{test.draftVersion ? ` · B 新版本 v${test.draftVersion}` : ''}{test.appliedVersion ? ` · 已应用 v${test.appliedVersion}` : ''}{test.winner ? ` · Winner：${test.winner}` : ''}</p>
+                  {test.status === '草稿' ? <p className="mt-1 text-[10px] text-amber-800">草稿尚未生效；点击“确认应用”后才会把 B Prompt 写入当前 Skill。</p> : null}
+                  {test.status === '确认应用' ? <p className="mt-1 text-[10px] text-emerald-800">已确认应用，B Prompt 已写入当前 Skill。</p> : null}
                 </div>
               );
             })}
@@ -1207,7 +1281,7 @@ export function OpsCenter() {
             <div className="space-y-3">
               <div className="grid gap-2 sm:grid-cols-2">
                 <Input value={editingAb.name} onChange={(event) => setEditingAb({ ...editingAb, name: event.target.value })} placeholder="实验名称" />
-                <label className="text-[10px] text-muted-foreground">状态<select className="field-select mt-1" value={editingAb.status} onChange={(event) => setEditingAb({ ...editingAb, status: event.target.value as AbTest['status'] })}><option value="草稿">草稿</option><option value="运行中">运行中</option><option value="已结束">已结束</option></select></label>
+                <label className="text-[10px] text-muted-foreground">状态<select className="field-select mt-1" value={editingAb.status} onChange={(event) => setEditingAb({ ...editingAb, status: event.target.value as AbTest['status'] })}><option value="草稿">草稿</option><option value="运行中">运行中</option><option value="已结束">已结束</option><option value="确认应用">确认应用</option></select></label>
               </div>
               <label className="block text-[10px] text-muted-foreground">实验 Skill<select className="field-select mt-1" value={editingAb.skillId ?? editingAb.skillAId ?? ''} onChange={(event) => void loadAbSkillPrompt(event.target.value, 'edit')} disabled={abSkillLoading}><option value="">选择 Skill</option>{skills.map((skill) => <option key={skill.id} value={skill.id}>{skill.name} · {skill.id}</option>)}</select></label>
               <div className="grid gap-3 xl:grid-cols-2">

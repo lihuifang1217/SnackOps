@@ -129,6 +129,8 @@ export function SkillsManager() {
   const [listState, setListState] = useState<'loading' | 'ready' | 'error'>('loading');
   const [detailLoading, setDetailLoading] = useState(false);
   const [versionsLoading, setVersionsLoading] = useState(false);
+  const [applyVersionId, setApplyVersionId] = useState('');
+  const [applyingVersion, setApplyingVersion] = useState(false);
   const [saving, setSaving] = useState(false);
   const [toggling, setToggling] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -158,6 +160,10 @@ export function SkillsManager() {
       return;
     }
     setVersions(result.data.versions);
+    setApplyVersionId((current) => {
+      if (result.data.versions.some((item) => item.id === current)) return current;
+      return (result.data.versions.find((item) => item.status !== '草稿') ?? result.data.versions[0])?.id ?? '';
+    });
   }, []);
 
   const loadSkill = useCallback(
@@ -188,6 +194,7 @@ export function SkillsManager() {
       setForm(formFrom(detailResult.data.skill));
       if (versionsResult.ok) {
         setVersions(versionsResult.data.versions);
+        setApplyVersionId((versionsResult.data.versions.find((item) => item.status !== '草稿') ?? versionsResult.data.versions[0])?.id ?? '');
       } else {
         setVersions([]);
         setError(versionsResult.error);
@@ -408,11 +415,38 @@ export function SkillsManager() {
     setDetail(skill);
     setForm(formFrom(skill));
     setVersions([]);
+    setApplyVersionId('');
     setVersionDetail(null);
     setSelectedVersion(null);
     setDiff(null);
     setTab('edit');
     void loadVersions(skill.id);
+  }
+
+  async function applySelectedVersion() {
+    if (!detail || !applyVersionId || applyingVersion) return;
+    const version = versions.find((item) => item.id === applyVersionId);
+    if (!version || version.status === '当前' || version.status === '草稿') return;
+    setApplyingVersion(true);
+    try {
+      const result = await apiRequest<SkillDetailResponse>(
+        `/api/skills/${encodeURIComponent(detail.id)}/apply-version`,
+        { method: 'POST', body: jsonBody({ versionId: applyVersionId }) },
+      );
+      if (!result.ok) {
+        toast.error('应用版本失败', { description: result.error });
+        return;
+      }
+      setDetail(result.data.skill);
+      setForm(formFrom(result.data.skill));
+      toast.success(`已应用版本 v${result.data.skill.version}`, {
+        description: '当前 Skill 已切换到所选版本；旧版本仍保留在版本快照中。',
+      });
+      await loadVersions(detail.id);
+      setTab('versions');
+    } finally {
+      setApplyingVersion(false);
+    }
   }
 
   async function inspectVersion(version: SkillVersionSummary) {
@@ -810,6 +844,19 @@ export function SkillsManager() {
                     </div>
                   </div>
                 ) : tab === 'versions' ? (
+                  <div className="space-y-3">
+                    <div className="flex flex-wrap items-end gap-2 rounded-lg border bg-muted/20 px-3 py-2">
+                      <label className="min-w-[220px] text-[10px] text-muted-foreground">选择应用版本
+                        <select className="field-select mt-1" value={applyVersionId} onChange={(event) => setApplyVersionId(event.target.value)} disabled={versionsLoading || applyingVersion}>
+                          {versions.map((version) => <option key={version.id} value={version.id} disabled={version.status === '当前' || version.status === '草稿'}>v{version.version} · {version.status}{version.version === versions[0]?.version ? ' · 最新' : ''}</option>)}
+                        </select>
+                      </label>
+                      <Button type="button" size="sm" onClick={() => void applySelectedVersion()} disabled={applyingVersion || !applyVersionId || versions.find((item) => item.id === applyVersionId)?.status === '当前' || versions.find((item) => item.id === applyVersionId)?.status === '草稿'}>
+                        {applyingVersion ? <LoaderCircle className="animate-spin" aria-hidden /> : <History aria-hidden />}
+                        {applyingVersion ? '应用中…' : '应用此版本'}
+                      </Button>
+                      <span className="mb-1 text-[10px] text-muted-foreground">默认应用最新可用版本；应用后旧版本仍保留，不会生成新版本号。</span>
+                    </div>
                   <div className="version-layout">
                     <div className="version-list-wrap">
                       <div className="mb-2 flex items-center justify-between gap-2">
@@ -838,6 +885,8 @@ export function SkillsManager() {
                                   <span className="font-mono text-[11px] font-semibold">v{version.version}</span>
                                   {version.status === '当前' ? (
                                     <Badge tone="success">当前</Badge>
+                                  ) : version.status === '草稿' ? (
+                                    <Badge tone="warning">草稿</Badge>
                                   ) : (
                                     <Badge tone="neutral">历史</Badge>
                                   )}
@@ -871,6 +920,8 @@ export function SkillsManager() {
                                 v{selectedVersion.version}
                                 {selectedVersion.status === '当前' ? (
                                   <Badge tone="success">当前版本</Badge>
+                                ) : selectedVersion.status === '草稿' ? (
+                                  <Badge tone="warning">草稿版本</Badge>
                                 ) : (
                                   <Badge tone="neutral">历史版本</Badge>
                                 )}
@@ -925,6 +976,7 @@ export function SkillsManager() {
                         </>
                       )}
                     </div>
+                  </div>
                   </div>
                 ) : (
                   <SkillTestPanel key={detail.id} skill={detail} />

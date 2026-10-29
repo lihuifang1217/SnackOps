@@ -130,7 +130,7 @@ export type SkillVersionSummary = {
   id: string;
   skillId: string;
   version: string;
-  status: '当前' | '历史';
+  status: '当前' | '历史' | '草稿';
   hash: string;
   changeNote: string;
   createdBy: string;
@@ -383,6 +383,13 @@ export type EvalScoreResponse = {
 export type PromptApplyResponse = {
   skill: SkillDetail;
   improvement: Improvement;
+};
+
+export type PromptVersionCreateResponse = {
+  draft: PromptDraftResponse;
+  version: SkillVersionDetail;
+  abTest: AbTest;
+  improvement: Improvement | null;
 };
 
 export type AbTestsResponse = {
