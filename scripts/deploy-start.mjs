@@ -23,16 +23,27 @@ if (!existsSync('node_modules/next/dist/bin/next')) {
   process.exit(1);
 }
 
+/**
+ * 每次都重新构建。
+ *
+ * 托管平台会复用同一个沙箱目录，上一次部署留下的 .next 会残留在磁盘上，
+ * 而平台上传时会排除构建产物。若沿用"缺 BUILD_ID 才构建"的判断，重新部署
+ * 后容器会继续用旧产物启动，线上代码与实际提交不一致（表现为新路由 404）。
+ * 构建成本只在部署时付出，远低于"以为发布了其实没发布"的代价。
+ * 本地开发不走此脚本，不受影响。
+ */
+console.log('[deploy-start] 开始执行 next build（部署环境不复用旧产物）…');
+const build = spawnSync(process.execPath, [nextBin, 'build', '--webpack'], {
+  stdio: 'inherit',
+  env: process.env,
+});
+if (build.status !== 0) {
+  console.error('[deploy-start] 构建失败，终止启动');
+  process.exit(build.status ?? 1);
+}
 if (!existsSync('.next/BUILD_ID')) {
-  console.log('[deploy-start] 未检测到生产构建，开始执行 next build…');
-  const build = spawnSync(process.execPath, [nextBin, 'build', '--webpack'], {
-    stdio: 'inherit',
-    env: process.env,
-  });
-  if (build.status !== 0) {
-    console.error('[deploy-start] 构建失败，终止启动');
-    process.exit(build.status ?? 1);
-  }
+  console.error('[deploy-start] 构建结束但缺少 .next/BUILD_ID，终止启动');
+  process.exit(1);
 }
 
 console.log(`[deploy-start] 启动生产服务，端口 ${rawPort}`);
