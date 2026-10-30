@@ -1,53 +1,5 @@
 [
   {
-    "id": "ann-1793154804990-771659",
-    "runId": "run-1793153805036-bd6fc520",
-    "target": "reply",
-    "label": "低分标注人工评估",
-    "status": "evaluating",
-    "origin": "low-annotation",
-    "sourceId": "ann-1793154090672-02340d",
-    "question": "我买 3 份每日混合坚果，叠加满 99 减 20 和 SNACK20 优惠券，最后多少钱？",
-    "answer": "你想买 3 份每日混合坚果，并叠加“满 99 减 20”活动和 SNACK20 优惠券，我来帮你算一下。\n\n根据商品与优惠规则：每日混合坚果 25g×7 单价 39.9 元，3 份小计 119.7 元；秋季囤货节满 99 减 20 可享 20 元优惠，SNACK20 券满 99 减 20 也可用且可与该活动叠加，因此试算合计为 79.7 元。\n\n提醒一下：该商品含核桃、巴旦木、腰果，可能含花生、芝麻，过敏人群请留意；以上为只读试算，实际以下单页结算为准。\n\n需要我继续帮你核对下单页金额或订单信息吗？",
-    "expectedReply": "",
-    "intent": "价格优惠",
-    "riskLevel": "low",
-    "qualityTags": [
-      "低评分"
-    ],
-    "requiredCapabilities": [
-      "skill:need-extraction",
-      "skill:clarification-question",
-      "skill:response-generator",
-      "skill:risk-check",
-      "tool:query_products",
-      "tool:query_activities",
-      "tool:query_coupons",
-      "tool:calculate_price"
-    ],
-    "requiredSkills": [
-      "skill:need-extraction",
-      "skill:clarification-question",
-      "skill:response-generator",
-      "skill:risk-check"
-    ],
-    "expectedFacts": [],
-    "expectedToolFacts": [],
-    "forbiddenPhrases": [],
-    "failureReason": "标注 overall=3/5，status=rejected",
-    "correctness": 3,
-    "relevance": 3,
-    "completeness": 3,
-    "safety": 3,
-    "tone": 3,
-    "overall": 3,
-    "dimensionNotes": {},
-    "note": "",
-    "annotator": "自动队列",
-    "createdAt": "2026-10-28T02:33:24.990Z",
-    "updatedAt": "2026-10-28T02:33:24.990Z"
-  },
-  {
     "id": "ann-1793154090671-dfd9bc",
     "runId": "run-1793153948215-57a21a1b",
     "target": "reply",
