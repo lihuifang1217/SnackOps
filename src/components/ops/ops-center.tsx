@@ -129,25 +129,21 @@ function splitTags(value: string): string[] {
 function originLabel(origin: Annotation['origin']): string {
   if (origin === 'bad-case') return 'Bad Case 人工评估';
   if (origin === 'low-rating') return '低评分人工评估';
-  if (origin === 'low-annotation') return '低分标注人工评估';
   if (origin === 'run-followup') return 'Run 标注人工跟进';
   if (origin === 'bad-case-evaluation') return 'Bad Case 人工评估入队';
   if (origin === 'low-rating-evaluation') return '低评分人工评估入队';
-  if (origin === 'low-annotation-evaluation') return '低分标注人工评估入队';
   if (origin === 'run-followup-evaluation') return 'Run 标注人工跟进入队';
   return '人工标注';
 }
 function originTone(origin: Annotation['origin']): BadgeTone {
   if (origin === 'bad-case' || origin === 'bad-case-evaluation') return 'danger';
   if (origin === 'low-rating' || origin === 'low-rating-evaluation') return 'warning';
-  if (origin === 'low-annotation' || origin === 'low-annotation-evaluation') return 'accent';
   if (origin === 'run-followup' || origin === 'run-followup-evaluation') return 'warning';
   return 'neutral';
 }
 function savedAnnotationOrigin(origin: Annotation['origin']): Annotation['origin'] {
   if (origin === 'bad-case') return 'bad-case-evaluation';
   if (origin === 'low-rating') return 'low-rating-evaluation';
-  if (origin === 'low-annotation') return 'low-annotation-evaluation';
   if (origin === 'run-followup') return 'run-followup-evaluation';
   return origin;
 }
@@ -1161,7 +1157,6 @@ export function OpsCenter() {
     const evaluations = annotations.filter((annotation) => annotation.status === 'evaluating');
     const badCases = evaluations.filter((annotation) => annotation.origin === 'bad-case').length;
     const lowRatings = evaluations.filter((annotation) => annotation.origin === 'low-rating').length;
-    const lowAnnotations = evaluations.filter((annotation) => annotation.origin === 'low-annotation').length;
     const followups = evaluations.filter((annotation) => annotation.origin === 'run-followup').length;
     return (
       <div className="space-y-4">
@@ -1173,7 +1168,6 @@ export function OpsCenter() {
           <Kpi label="待评估" value={String(evaluations.length)} hint="evaluating" tone={evaluations.length > 0 ? 'warning' : 'success'} />
           <Kpi label="Bad Case" value={String(badCases)} hint="失败 Run" tone="danger" />
           <Kpi label="低评分" value={String(lowRatings)} hint="评分 ≤ 2" tone="warning" />
-          <Kpi label="低分标注" value={String(lowAnnotations)} hint="overall ≤ 2 / rejected" tone="warning" />
           <Kpi label="Run 跟进" value={String(followups)} hint="Run 标注人工跟进" tone="accent" />
           <Kpi label="已沉淀" value={String(annotations.filter((annotation) => annotation.origin.endsWith('-evaluation')).length)} hint="保存为数据标注" tone="success" />
         </div>

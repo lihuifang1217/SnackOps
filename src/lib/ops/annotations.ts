@@ -21,11 +21,9 @@ export const annotationCreateSchema = z
       'manual',
       'bad-case',
       'low-rating',
-      'low-annotation',
       'run-followup',
       'bad-case-evaluation',
       'low-rating-evaluation',
-      'low-annotation-evaluation',
       'run-followup-evaluation',
     ]).optional(),
     correctness: score.optional(),
@@ -61,11 +59,9 @@ export const annotationUpdateSchema = z
       'manual',
       'bad-case',
       'low-rating',
-      'low-annotation',
       'run-followup',
       'bad-case-evaluation',
       'low-rating-evaluation',
-      'low-annotation-evaluation',
       'run-followup-evaluation',
     ]).optional(),
     correctness: score.optional(),
@@ -149,14 +145,12 @@ function requiredSkillsFor(run: Run): string[] {
 const AUTO_ORIGINS = new Set<Annotation['origin']>([
   'bad-case',
   'low-rating',
-  'low-annotation',
   'run-followup',
 ]);
 
 function baseOrigin(origin: Annotation['origin']): Annotation['origin'] {
   if (origin === 'bad-case-evaluation') return 'bad-case';
   if (origin === 'low-rating-evaluation') return 'low-rating';
-  if (origin === 'low-annotation-evaluation') return 'low-annotation';
   if (origin === 'run-followup-evaluation') return 'run-followup';
   return origin;
 }
@@ -164,7 +158,6 @@ function baseOrigin(origin: Annotation['origin']): Annotation['origin'] {
 function savedOrigin(origin: Annotation['origin']): Annotation['origin'] {
   if (origin === 'bad-case') return 'bad-case-evaluation';
   if (origin === 'low-rating') return 'low-rating-evaluation';
-  if (origin === 'low-annotation') return 'low-annotation-evaluation';
   if (origin === 'run-followup') return 'run-followup-evaluation';
   return origin;
 }
@@ -283,7 +276,6 @@ export async function enqueueEvalFailure(input: {
  * 人工评估队列：
  * - 失败 Run Bad Case
  * - 低评分服务
- * - 低分标注
  * - Run 标注人工跟进
  * 旧版自动标注（pending）会迁移到 evaluating；保存为标注后变为 pending。
  */
@@ -329,30 +321,6 @@ export async function ensureEvaluationQueue(): Promise<{ created: number; migrat
         answer: rating.answer || run.finalReply || '',
         expectedReply: '',
         qualityTags: ['低评分'],
-      }),
-    );
-  }
-
-  for (const annotation of annotations) {
-    if (annotation.overall > 2 && annotation.status !== 'rejected') continue;
-    const run = runMap.get(annotation.runId);
-    if (!run) continue;
-    candidates.push(
-      automaticAnnotation({
-        run,
-        origin: 'low-annotation',
-        sourceId: annotation.id,
-        label: '低分标注人工评估',
-        failureReason: `标注 overall=${annotation.overall}/5，status=${annotation.status}${annotation.note ? `：${annotation.note}` : ''}`,
-        question: annotation.question || run.question,
-        answer: annotation.answer || run.finalReply || '',
-        expectedReply: annotation.expectedReply,
-        intent: annotation.intent,
-        qualityTags: annotation.qualityTags,
-        requiredSkills: annotation.requiredSkills,
-        expectedToolFacts: annotation.expectedToolFacts,
-        forbiddenPhrases: annotation.forbiddenPhrases,
-        note: annotation.note,
       }),
     );
   }
