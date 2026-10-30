@@ -11,6 +11,7 @@ import { listEvalCases } from './cases';
 import { scoreEvalCaseDetailed } from './detailed-score';
 import { getEvalConfig } from './config';
 import { judgeEvalCase } from './judge';
+import { enqueueEvalFailure } from '@/lib/ops/annotations';
 
 const providerSelection = z
   .enum(['auto', 'classroom-fixture', 'openai-compatible', 'coze'])
@@ -139,6 +140,9 @@ async function runBatch(batchId: string): Promise<void> {
           error: run.error,
           score,
         };
+        if (score.status === 'FAIL') {
+          await enqueueEvalFailure({ evalCase, run, reason: score.reason });
+        }
       } catch (caught) {
         const message = caught instanceof Error ? caught.message : '批次用例执行失败';
         result = {

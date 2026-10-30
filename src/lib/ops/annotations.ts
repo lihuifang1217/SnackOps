@@ -220,6 +220,65 @@ function automaticAnnotation(input: {
   };
 }
 
+/** Eval 单条/批次 FAIL 时自动进入人工评估队列。 */
+export async function enqueueEvalFailure(input: {
+  evalCase: EvalCase;
+  run: Run;
+  reason: string;
+}): Promise<{ created: boolean; annotation: Annotation | null }> {
+  const { evalCase, run, reason } = input;
+  let created = false;
+  let annotation: Annotation | null = null;
+  await updateCollection('annotations', (current) => {
+    const existing = current.find(
+      (item) => item.runId === run.id && baseOrigin(item.origin) === 'bad-case',
+    );
+    if (existing) {
+      annotation = existing;
+      return current;
+    }
+    const now = new Date().toISOString();
+    annotation = {
+      id: `ann-${Date.now()}-${randomUUID().slice(0, 6)}`,
+      runId: run.id,
+      target: 'reply',
+      label: `Eval Bad Case · ${evalCase.name}`,
+      status: 'evaluating',
+      origin: 'bad-case-evaluation',
+      sourceId: run.id,
+      question: evalCase.question,
+      answer: run.finalReply ?? '',
+      expectedReply: evalCase.expectedReply,
+      intent: deriveQuestionType(evalCase.question),
+      riskLevel: run.riskResult?.riskLevel ?? evalCase.riskLevel,
+      qualityTags: ['Eval FAIL', ...evalCase.tags],
+      requiredCapabilities:
+        evalCase.requiredCapabilities.length > 0
+          ? evalCase.requiredCapabilities
+          : requiredCapabilitiesFor(run),
+      requiredSkills: requiredSkillsFor(run),
+      expectedFacts: [],
+      expectedToolFacts: evalCase.expectedToolFacts,
+      forbiddenPhrases: evalCase.forbiddenWords,
+      failureReason: reason,
+      correctness: 3,
+      relevance: 3,
+      completeness: 3,
+      safety: 3,
+      tone: 3,
+      overall: 3,
+      dimensionNotes: {},
+      note: `Eval 用例 ${evalCase.id} 执行失败，自动进入人工评估。`,
+      annotator: '自动队列',
+      createdAt: now,
+      updatedAt: now,
+    };
+    created = true;
+    return [annotation, ...current];
+  });
+  return { created, annotation };
+}
+
 /**
  * 人工评估队列：
  * - 失败 Run Bad Case

@@ -1167,7 +1167,7 @@ export function OpsCenter() {
       <div className="space-y-4">
         <div className="rounded-lg border border-amber-200 bg-amber-50 px-3.5 py-3 text-[11px] leading-5 text-amber-900">
           <div className="flex flex-wrap items-center gap-2 font-semibold"><CheckCircle2 className="size-3.5" aria-hidden />人工评估待评估列表</div>
-          <p className="mt-1">复核 Bad Case 与低分服务，写出期望回复并沉淀为标注数据。失败 Run、Run 标注人工跟进和低评分服务数据会自动进入这里。</p>
+          <p className="mt-1">复核 Bad Case 与低分服务，写出期望回复并沉淀为标注数据。失败 Run、Eval 单条/批次执行失败、Run 标注人工跟进和低评分服务数据会自动进入这里。</p>
         </div>
         <div className="ops-kpi-grid">
           <Kpi label="待评估" value={String(evaluations.length)} hint="evaluating" tone={evaluations.length > 0 ? 'warning' : 'success'} />

@@ -5,6 +5,7 @@ import { getEvalCase } from '@/lib/eval/cases';
 import { getEvalConfig } from '@/lib/eval/config';
 import { judgeEvalCase } from '@/lib/eval/judge';
 import { scoreEvalCaseDetailed } from '@/lib/eval/detailed-score';
+import { enqueueEvalFailure } from '@/lib/ops/annotations';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -25,8 +26,12 @@ export async function POST(request: Request) {
       getEvalConfig(),
     ]);
     const judge = await judgeEvalCase({ evalCase, run, config });
+    const score = scoreEvalCaseDetailed({ evalCase, run, judge });
+    if (score.status === 'FAIL') {
+      await enqueueEvalFailure({ evalCase, run, reason: score.reason });
+    }
     return jsonResponse({
-      score: scoreEvalCaseDetailed({ evalCase, run, judge }),
+      score,
       run,
       case: evalCase,
     });
